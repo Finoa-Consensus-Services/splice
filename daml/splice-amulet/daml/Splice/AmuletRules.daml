@@ -219,7 +219,7 @@ template AmuletRules
         createdAt <- getAndValidateCreatedAt optCreatedAt
         assertWithinDeadline "preapprovalExpiresAt" preapprovalExpiresAt
         (amuletPaid, transferResult, meta) <-
-          payForTransferPreapproval dso validator context inputs createdAt preapprovalExpiresAt
+          payForTransferPreapproval "create ExternalPartySetupProposal" dso validator context inputs createdAt preapprovalExpiresAt
         proposalCid <- create ExternalPartySetupProposal with
           user
           validator
@@ -249,7 +249,7 @@ template AmuletRules
         createdAt <- getAndValidateCreatedAt optCreatedAt
         assertWithinDeadline "expiresAt" expiresAt
         (amuletPaid, transferResult, meta) <-
-          payForTransferPreapproval dso provider context inputs createdAt expiresAt
+          payForTransferPreapproval "create TransferPreapproval" dso provider context inputs createdAt expiresAt
         transferPreapprovalCid <- create TransferPreapproval with
           receiver
           provider
@@ -2146,7 +2146,7 @@ template TransferPreapproval
         assertWithinDeadline "TransferPreapproval.expiresAt" expiresAt
         require "newExpiresAt is after expiresAt" (newExpiresAt > expiresAt)
         (amuletPaid, transferResult, meta) <-
-          payForTransferPreapproval dso provider context inputs expiresAt newExpiresAt
+          payForTransferPreapproval "renew TransferPreapproval" dso provider context inputs expiresAt newExpiresAt
         transferPreapprovalCid <- create this with
           lastRenewedAt = expiresAt
           expiresAt = newExpiresAt
@@ -2260,9 +2260,9 @@ totalBurnFromSummary : TransferSummary -> Decimal
 totalBurnFromSummary TransferSummary{..} = sum outputFees + holdingFees + senderChangeFee
 
 payForTransferPreapproval
-  : Party -> Party -> PaymentTransferContext -> [TransferInput] -> Time -> Time
+  : Text -> Party -> Party -> PaymentTransferContext -> [TransferInput] -> Time -> Time
   -> Update (Decimal, TransferResult, Metadata)
-payForTransferPreapproval dso provider context inputs expiresAt newExpiresAt = do
+payForTransferPreapproval reason dso provider context inputs expiresAt newExpiresAt = do
   amuletRules <- fetchChecked (ForDso dso) context.amuletRules
   configUsd <- getValueAsOfLedgerTime amuletRules.configSchedule
   let extension = newExpiresAt `subTime` expiresAt
@@ -2294,7 +2294,7 @@ payForTransferPreapproval dso provider context inputs expiresAt newExpiresAt = d
         , emptyMetadata)
     else do
       (amuletPaid, _) <- computeTransferPreapprovalFee paidExtension configUsd context.context dso
-      (transferResult, meta) <- splitAndBurn (toInterfaceContractId context.amuletRules) provider amuletPaid inputs context.context dso "renew TransferPreapproval"
+      (transferResult, meta) <- splitAndBurn (toInterfaceContractId context.amuletRules) provider amuletPaid inputs context.context dso reason
       pure (amuletPaid, transferResult, meta)
 
 -- Token standard context parsing
