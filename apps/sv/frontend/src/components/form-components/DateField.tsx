@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { GOVERNANCE_TEXT_FIELD_CLASS } from '@canton-network/splice-common-frontend';
 import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { DesktopDateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -25,7 +26,7 @@ export const DateField: React.FC<DateFieldProps> = props => {
   return (
     <Box>
       {title && (
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="fieldLabel" component="label" sx={{ mb: 1, display: 'block' }}>
           {title}
         </Typography>
       )}
@@ -47,12 +48,16 @@ export const DateField: React.FC<DateFieldProps> = props => {
           slotProps={{
             textField: {
               fullWidth: true,
-              variant: 'outlined',
+              variant: 'filled',
+              className: GOVERNANCE_TEXT_FIELD_CLASS,
               id: `${id}-field`,
               helperText: field.state.meta.errors?.[0],
               onBlur: field.handleBlur,
-              inputProps: {
-                'data-testid': `${id}-field`,
+              slotProps: {
+                htmlInput: {
+                  'data-testid': `${id}-field`,
+                },
+                input: { disableUnderline: true },
               },
             },
           }}

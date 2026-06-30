@@ -44,7 +44,7 @@ export const CreateProposal: React.FC = () => {
   const selectedAction = createProposalActions.find(a => a.value === action);
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ width: '100%' }}>
       {selectedAction ? (
         <ProposalForm action={selectedAction.value as SupportedActionTag} />
       ) : (

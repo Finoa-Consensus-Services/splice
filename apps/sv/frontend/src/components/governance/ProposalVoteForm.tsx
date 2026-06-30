@@ -239,7 +239,6 @@ export const ProposalVoteForm: React.FC<ProposalVoteFormProps> = props => {
                       form.setFieldValue('vote', 'rejected');
                       form.handleSubmit();
                     }}
-                    sx={{ backgroundColor: 'transparent' }}
                     data-testid="your-vote-reject"
                   >
                     Reject

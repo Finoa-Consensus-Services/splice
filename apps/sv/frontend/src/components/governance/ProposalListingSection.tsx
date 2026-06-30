@@ -18,6 +18,10 @@ import { VoteRequest } from '@daml.js/splice-dso-governance/lib/Splice/DsoRules'
 import { ContractId } from '@daml/types';
 import { useNavigate } from 'react-router';
 import { CopyableIdentifier, PageSectionHeader, VoteStats } from '../../components/beta';
+import {
+  GOVERNANCE_TABLE_CONTAINER_CLASS,
+  GOVERNANCE_TABLE_HEAD_CELL_CLASS,
+} from '@canton-network/splice-common-frontend';
 import { ProposalListingData, ProposalListingStatus, YourVoteStatus } from '../../utils/types';
 import { InfoOutlined } from '@mui/icons-material';
 import dayjs from 'dayjs';
@@ -111,17 +115,30 @@ export const ProposalListingSection: React.FC<ProposalListingSectionProps> = pro
         <InfoBox info={noDataMessage} data-testid={`${uniqueId}-section-info`} />
       ) : (
         <>
-          <TableContainer data-testid={`${uniqueId}-section-table`}>
+          <TableContainer
+            className={GOVERNANCE_TABLE_CONTAINER_CLASS}
+            data-testid={`${uniqueId}-section-table`}
+          >
             <Table>
               <TableHead>
                 <TableRow sx={{ display: 'grid', gridTemplateColumns: gridTemplate }}>
-                  <TableCell>ACTION</TableCell>
-                  <TableCell>VOTE PROPOSAL CONTRACT ID</TableCell>
-                  {showThresholdDeadline && <TableCell>THRESHOLD DEADLINE</TableCell>}
-                  <TableCell>EFFECTIVE AT</TableCell>
-                  {showStatus && <TableCell>STATUS</TableCell>}
-                  {showVoteStats && <TableCell>VOTES</TableCell>}
-                  <TableCell>YOUR VOTE</TableCell>
+                  <TableCell className={GOVERNANCE_TABLE_HEAD_CELL_CLASS}>ACTION</TableCell>
+                  <TableCell className={GOVERNANCE_TABLE_HEAD_CELL_CLASS}>
+                    VOTE PROPOSAL CONTRACT ID
+                  </TableCell>
+                  {showThresholdDeadline && (
+                    <TableCell className={GOVERNANCE_TABLE_HEAD_CELL_CLASS}>
+                      THRESHOLD DEADLINE
+                    </TableCell>
+                  )}
+                  <TableCell className={GOVERNANCE_TABLE_HEAD_CELL_CLASS}>EFFECTIVE AT</TableCell>
+                  {showStatus && (
+                    <TableCell className={GOVERNANCE_TABLE_HEAD_CELL_CLASS}>STATUS</TableCell>
+                  )}
+                  {showVoteStats && (
+                    <TableCell className={GOVERNANCE_TABLE_HEAD_CELL_CLASS}>VOTES</TableCell>
+                  )}
+                  <TableCell className={GOVERNANCE_TABLE_HEAD_CELL_CLASS}>YOUR VOTE</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody sx={{ display: 'contents' }}>
@@ -259,10 +276,11 @@ const VoteRow: React.FC<VoteRowProps> = React.memo(props => {
         gridTemplateColumns: gridTemplate,
         alignItems: 'center',
         borderRadius: '4px',
-        border: '1px solid #4F4F4F',
+        border: '1px solid',
+        borderColor: 'colors.divider',
         paddingBlock: '10px',
         cursor: 'pointer',
-        '&:hover': { backgroundColor: '#363636' },
+        '&:hover': { backgroundColor: 'colors.field' },
       }}
       data-testid={`${uniqueId}-row`}
     >

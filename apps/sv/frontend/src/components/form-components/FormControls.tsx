@@ -31,13 +31,15 @@ export const FormControls: React.FC<FormControlsProps> = props => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        spacing: 4,
+        gap: 1.75,
+        alignSelf: 'stretch',
       }}
       data-testid="form-controls"
     >
       <Button
-        variant="outlined"
-        sx={{ mr: 8 }}
+        type="button"
+        variant="pill"
+        color="secondary"
         data-testid="cancel-button"
         onClick={() => handleCancel()}
       >
@@ -49,8 +51,8 @@ export const FormControls: React.FC<FormControlsProps> = props => {
         children={([canSubmit, isSubmitting]) => (
           <Button
             variant="pill"
-            type={'submit'}
-            size="large"
+            color="primary"
+            type="submit"
             disabled={!canSubmit || isSubmitting}
             id="submit-button"
             data-testid="submit-button"

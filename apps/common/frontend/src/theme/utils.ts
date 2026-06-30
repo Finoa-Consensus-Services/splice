@@ -32,10 +32,12 @@ interface PillButtonConfig {
   textColor: string;
   textHoverColor?: string;
   textFocusColor?: string;
+  textDisableColor?: string;
 
   border?: string;
   borderFocus?: string;
   borderDisableColor?: string;
+  disabledBorder?: string;
 }
 
 export const stylePillButton = (
@@ -51,9 +53,11 @@ export const stylePillButton = (
     textColor,
     textHoverColor = textColor,
     textFocusColor = textColor,
+    textDisableColor = textColor,
     border = 'none',
     borderFocus = border,
     borderDisableColor = bgDisableColor,
+    disabledBorder,
   } = config;
 
   return {
@@ -76,7 +80,8 @@ export const stylePillButton = (
       },
       '&:disabled': {
         backgroundColor: bgDisableColor,
-        border: `2px solid ${borderDisableColor}`,
+        color: textDisableColor,
+        border: disabledBorder ?? `2px solid ${borderDisableColor}`,
       },
     },
   };

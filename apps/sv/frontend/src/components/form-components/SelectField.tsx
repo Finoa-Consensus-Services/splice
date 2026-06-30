@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { GOVERNANCE_SELECT_CLASS, governanceSelectRenderValueSx } from '@canton-network/splice-common-frontend';
 import {
   Box,
   FormControl,
@@ -37,25 +38,32 @@ export const SelectField: React.FC<SelectFieldProps> = props => {
 
   return (
     <Box data-testid={`${id}-select-component`}>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="fieldLabel" component="label" sx={{ mb: 2, display: 'block' }}>
         {title}
       </Typography>
 
-      <FormControl variant="outlined" error={isError} fullWidth>
+      <FormControl error={isError} fullWidth>
         <Select
+          variant="filled"
+          disableUnderline
+          className={GOVERNANCE_SELECT_CLASS}
           value={field.state.value}
           displayEmpty
           renderValue={selected => {
             if (!selected) {
               return showPlaceholder ? (
-                <Typography component="span" color="text.secondary">
+                <Typography component="span" variant="fieldPlaceholder" sx={governanceSelectRenderValueSx}>
                   {placeholder}
                 </Typography>
               ) : (
                 ''
               );
             }
-            return options.find(option => option.value === selected)?.key ?? selected;
+            return (
+              <Typography component="span" variant="fieldValue" sx={governanceSelectRenderValueSx}>
+                {options.find(option => option.value === selected)?.key ?? selected}
+              </Typography>
+            );
           }}
           onChange={(e: SelectChangeEvent) => {
             handleSelectValueChange(e.target.value as string);

@@ -3,7 +3,7 @@
 import { VoteRequest } from '@daml.js/splice-dso-governance/lib/Splice/DsoRules';
 import { ContractId } from '@daml/types';
 import { East } from '@mui/icons-material';
-import { Alert, Box, Stack, Typography } from '@mui/material';
+import { Alert, Box, Paper, Stack, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router';
 import { CopyableIdentifier, MemberIdentifier, PageSectionHeader } from '../../components/beta';
 import React from 'react';
@@ -88,12 +88,12 @@ const ActionCard = (props: ActionCardProps) => {
       style={{ textDecoration: 'none' }}
       data-testid="action-required-card-link"
     >
-      <Box
+      <Paper
+        variant="governance-card"
+        elevation={0}
         sx={{
-          bgcolor: 'colors.neutral.10',
           p: 2,
-          borderRadius: '4px',
-          '&:hover': { backgroundColor: '#363636' },
+          '&:hover': { backgroundColor: 'colors.field' },
         }}
         className="action-required-card"
         data-testid="action-required-card"
@@ -185,7 +185,7 @@ const ActionCard = (props: ActionCardProps) => {
             <East fontSize="small" color="secondary" />
           </Stack>
         </Stack>
-      </Box>
+      </Paper>
     </RouterLink>
   );
 };
@@ -203,25 +203,14 @@ const ActionCardSegment: React.FC<ActionCardSegmentProps> = ({
 }) => (
   <Stack height="100%" justifyContent="space-between" data-testid={testId}>
     <Typography
-      fontSize={12}
-      lineHeight={2}
-      fontWeight={700}
-      variant="subtitle2"
-      color="text.light"
+      variant="fieldLabel"
       gutterBottom
       data-testid={`${testId}-title`}
     >
       {title}
     </Typography>
     {typeof content === 'string' ? (
-      <Typography
-        variant="body1"
-        color="text.light"
-        fontWeight="medium"
-        fontSize={14}
-        lineHeight={2}
-        data-testid={`${testId}-content`}
-      >
+      <Typography variant="fieldValue" data-testid={`${testId}-content`}>
         {content}
       </Typography>
     ) : (

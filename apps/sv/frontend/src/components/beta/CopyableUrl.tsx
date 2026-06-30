@@ -3,6 +3,7 @@
 
 import { ContentCopy } from '@mui/icons-material';
 import { Box, IconButton, Link } from '@mui/material';
+import { theme } from '@canton-network/splice-common-frontend';
 import { sanitizeUrl } from '@canton-network/splice-common-frontend-utils';
 
 import type { CopyableIdentifierSize } from './CopyableIdentifier';
@@ -31,8 +32,8 @@ const CopyableUrl: React.FC<CopyableUrlProps> = ({ url, size, 'data-testid': tes
         color="inherit"
         underline="hover"
         sx={{
-          fontFamily: 'Source Code Pro',
-          fontSize: size === 'small' ? '14px' : '18px',
+          fontFamily: theme.fonts.mono.fontFamily,
+          fontSize: size === 'small' ? '0.875rem' : '1.125rem',
           fontWeight: 'medium',
           maxWidth: '100%',
           textOverflow: 'ellipsis',

@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { GOVERNANCE_TEXT_FIELD_CLASS } from '@canton-network/splice-common-frontend';
 import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { useFieldContext } from '../../hooks/formContext';
 import { DesktopDateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -56,7 +57,7 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="fieldLabel" component="label" sx={{ mb: 1, display: 'block' }}>
         {title}
       </Typography>
 
@@ -91,14 +92,17 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
                 slotProps={{
                   textField: {
                     fullWidth: true,
-                    variant: 'outlined',
+                    variant: 'filled',
+                    className: GOVERNANCE_TEXT_FIELD_CLASS,
                     id: `${id}-field`,
-                    className: 'effective-date-field',
                     onBlur: field.handleBlur,
                     error: !field.state.meta.isValid,
                     helperText: field.state.meta.errors?.[0],
-                    inputProps: {
-                      'data-testid': `${id}-field`,
+                    slotProps: {
+                      htmlInput: {
+                        'data-testid': `${id}-field`,
+                      },
+                      input: { disableUnderline: true },
                     },
                   },
                 }}

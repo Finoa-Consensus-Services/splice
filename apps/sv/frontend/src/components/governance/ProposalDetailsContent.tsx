@@ -192,7 +192,7 @@ export const ProposalDetailsContent: React.FC<ProposalDetailsContentProps> = pro
         </Button>
       </Stack>
 
-      <Stack sx={{ bgcolor: 'colors.neutral.10', p: 6 }} alignItems="center" gap={8}>
+      <Stack sx={{ bgcolor: 'colors.card', p: 6 }} alignItems="center" gap={8}>
         <VoteSection title="Proposal Details" data-testid="proposal-details-proposal-details">
           <DetailItem
             label="Action"

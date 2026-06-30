@@ -15,13 +15,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, actionElement, 'data-tes
     sx={{ mb: 7, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
     data-testid={testId}
   >
-    <Typography
-      variant="h2"
-      lineHeight={1}
-      fontSize={40}
-      fontFamily="termina"
-      data-testid={`${testId}-title`}
-    >
+    <Typography variant="pageTitle" lineHeight={1} data-testid={`${testId}-title`}>
       {title}
     </Typography>
     {actionElement ?? null}

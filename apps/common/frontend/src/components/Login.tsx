@@ -61,8 +61,8 @@ const Login: React.FC<LoginProps> = ({
         <Typography
           variant="h5"
           textTransform="uppercase"
-          fontFamily={theme.fonts.monospace.fontFamily}
-          fontWeight={theme.fonts.monospace.fontWeight}
+          fontFamily={theme.fonts.brand.fontFamily}
+          fontWeight={theme.fonts.brand.fontWeight}
         >
           {title}
         </Typography>

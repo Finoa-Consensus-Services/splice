@@ -11,9 +11,21 @@ import {
   SelectChangeEvent,
   Typography,
 } from '@mui/material';
+import { GOVERNANCE_SELECT_CLASS, governanceFormCardPadding, governanceFormInnerSx, governanceSelectRenderValueSx } from '@canton-network/splice-common-frontend';
 import { useForm } from '@tanstack/react-form';
 import { useNavigate } from 'react-router';
 import { createProposalActions } from '../../utils/governance';
+
+const PROPOSAL_TYPE_LABEL = 'Select proposal type';
+const PROPOSAL_TYPE_PLACEHOLDER = 'Select a proposal type';
+
+const validateProposalType = (value: string) => {
+  if (!value) {
+    return 'Select a proposal type';
+  }
+  const res = createProposalActions.find(a => a.value === value);
+  return res ? undefined : 'Invalid action';
+};
 
 export const SelectAction: React.FC = () => {
   const navigate = useNavigate();
@@ -33,90 +45,116 @@ export const SelectAction: React.FC = () => {
   };
 
   return (
-    <Box>
-      <Paper
-        sx={{
-          bgcolor: 'background.paper',
-          p: 4,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Box sx={{ minWidth: '60%' }}>
-          <Typography sx={{ mb: 2 }} variant="h3">
-            Select an Action
-          </Typography>
+    <Box data-testid="select-action-form" id="select-action-form" sx={{ width: '100%' }}>
+      <Paper variant="governance-card" elevation={0} sx={governanceFormCardPadding}>
+        <Box
+          component="form"
+          onSubmit={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+          }}
+          sx={{ ...governanceFormInnerSx, gap: 4 }}
+        >
+          <form.Field
+            name="action"
+            validators={{
+              onMount: ({ value }) => validateProposalType(value),
+              onChange: ({ value }) => validateProposalType(value),
+            }}
+            children={field => (
+              <FormControl fullWidth>
+                <Typography
+                  id="select-proposal-type-label"
+                  component="label"
+                  variant="fieldLabel"
+                  sx={{ mb: 2, display: 'block' }}
+                >
+                  {PROPOSAL_TYPE_LABEL}
+                </Typography>
+                <Select
+                  variant="filled"
+                  disableUnderline
+                  className={GOVERNANCE_SELECT_CLASS}
+                  labelId="select-proposal-type-label"
+                  id="select-action"
+                  data-testid="select-action"
+                  displayEmpty
+                  value={field.state.value}
+                  onChange={(e: SelectChangeEvent) =>
+                    field.handleChange(e.target.value as string)
+                  }
+                  onBlur={field.handleBlur}
+                  renderValue={selected => {
+                    if (!selected) {
+                      return (
+                        <Typography
+                          component="span"
+                          variant="fieldPlaceholder"
+                          sx={governanceSelectRenderValueSx}
+                        >
+                          {PROPOSAL_TYPE_PLACEHOLDER}
+                        </Typography>
+                      );
+                    }
+                    return (
+                      <Typography component="span" variant="fieldValue" sx={governanceSelectRenderValueSx}>
+                        {createProposalActions.find(a => a.value === selected)?.name ?? ''}
+                      </Typography>
+                    );
+                  }}
+                >
+                  {createProposalActions.map(actionName => (
+                    <MenuItem
+                      key={actionName.value}
+                      value={actionName.value}
+                      data-testid={actionName.value}
+                    >
+                      {actionName.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          />
 
-          <form
-            onSubmit={e => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 1.75,
+              alignSelf: 'stretch',
             }}
           >
-            <form.Field
-              name="action"
-              validators={{
-                onMount: ({ value }) => {
-                  const res = createProposalActions.find(a => a.value === value);
-                  return res ? undefined : 'Invalid action';
-                },
-              }}
-              children={field => (
-                <FormControl fullWidth>
-                  <Select
-                    labelId="select-action-label"
-                    id="select-action"
-                    data-testid="select-action"
-                    value={field.state.value}
-                    onChange={(e: SelectChangeEvent) =>
-                      field.handleChange(e.target.value as string)
-                    }
-                    onBlur={field.handleBlur}
+            <form.Subscribe
+              selector={state => state.canSubmit}
+              children={canSubmit => (
+                <>
+                  <Button
+                    type="button"
+                    variant="pill"
+                    color="secondary"
+                    data-testid="cancel-button"
+                    onClick={handleCancel}
                   >
-                    {createProposalActions.map(actionName => (
-                      <MenuItem
-                        key={actionName.value}
-                        value={actionName.value}
-                        data-testid={actionName.value}
-                      >
-                        {actionName.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    Cancel
+                  </Button>
+
+                  <Button
+                    variant="pill"
+                    color="primary"
+                    id="next-button"
+                    data-testid="next-button"
+                    type="submit"
+                    disabled={!canSubmit}
+                  >
+                    Next
+                  </Button>
+                </>
               )}
             />
-
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
-              <form.Subscribe
-                selector={state => state.canSubmit}
-                children={canSubmit => (
-                  <>
-                    <Button
-                      variant="outlined"
-                      data-testid="cancel-button"
-                      onClick={handleCancel}
-                      type="button"
-                    >
-                      Cancel
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      id="next-button"
-                      data-testid="next-button"
-                      type="submit"
-                      disabled={!canSubmit}
-                    >
-                      Next
-                    </Button>
-                  </>
-                )}
-              />
-            </Box>
-          </form>
+          </Box>
         </Box>
       </Paper>
     </Box>

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { ContentCopy } from '@mui/icons-material';
 import { Box, Chip, IconButton, Typography } from '@mui/material';
+import { theme } from '@canton-network/splice-common-frontend';
 
 export type CopyableIdentifierSize = 'small' | 'large';
 
@@ -25,12 +26,16 @@ const CopyableIdentifier: React.FC<CopyableIdentifierProps> = ({
     data-testid={testId}
   >
     <Typography
-      variant="body1"
+      variant={size === 'small' ? 'body2' : 'monoValue'}
       fontWeight="medium"
-      fontFamily="Source Code Pro"
-      fontSize={size === 'small' ? '14px' : '18px'}
+      sx={{
+        fontFamily: theme.fonts.mono.fontFamily,
+        fontSize: size === 'small' ? '0.875rem' : undefined,
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+      }}
       data-testid={`${testId}-value`}
-      sx={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
     >
       {value}
     </Typography>

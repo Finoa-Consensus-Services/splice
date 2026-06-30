@@ -15,11 +15,17 @@ export const ProposalTypeField: React.FC<ProposalTypeFieldProps> = props => {
 
   return (
     <Box>
-      <Typography variant="h6" id={`${id}-title`} data-testid={`${id}-title`} gutterBottom>
+      <Typography
+        variant="fieldLabel"
+        component="label"
+        id={`${id}-title`}
+        data-testid={`${id}-title`}
+        sx={{ mb: 1, display: 'block' }}
+      >
         {title}
       </Typography>
 
-      <Typography variant="h4" id={id} data-testid={id}>
+      <Typography variant="fieldValue" id={id} data-testid={id} sx={{ fontSize: '1.25rem' }}>
         {field.state.value}
       </Typography>
     </Box>

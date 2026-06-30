@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { GOVERNANCE_TEXT_FIELD_CLASS } from '@canton-network/splice-common-frontend';
 import { Box, TextField as MuiTextField, Typography } from '@mui/material';
 import { useFieldContext } from '../../hooks/formContext';
 import { useDsoInfos } from '../../contexts/SvContext';
@@ -28,10 +29,10 @@ export const ProposalSummaryField: React.FC<ProposalSummaryFieldProps> = props =
 
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="fieldLabel" component="label" sx={{ mb: 1, display: 'block' }}>
         {title || PROPOSAL_SUMMARY_TITLE}
         {optional && (
-          <Typography component="span" variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+          <Typography component="span" variant="fieldPlaceholder" sx={{ ml: 1, textTransform: 'none' }}>
             optional
           </Typography>
         )}
@@ -40,13 +41,21 @@ export const ProposalSummaryField: React.FC<ProposalSummaryFieldProps> = props =
         fullWidth
         multiline
         rows={5}
-        variant="outlined"
+        variant="filled"
+        className={GOVERNANCE_TEXT_FIELD_CLASS}
         autoComplete="off"
         value={field.state.value}
         onBlur={field.handleBlur}
         onChange={e => field.handleChange(e.target.value)}
         error={!field.state.meta.isValid}
-        helperText={field.state.meta.errors?.[0]}
+        helperText={
+          <Typography variant="caption" component="span" data-testid={`${id}-error`}>
+            {field.state.meta.errors?.[0]}
+          </Typography>
+        }
+        slotProps={{
+          input: { disableUnderline: true },
+        }}
         inputProps={{ 'data-testid': id, maxLength }}
         id={id}
       />
@@ -64,7 +73,7 @@ export const ProposalSummaryField: React.FC<ProposalSummaryFieldProps> = props =
         </Typography>
         <Typography
           variant="body2"
-          color={'text.secondary'}
+          color="text.secondary"
           data-testid={`${id}-character-counter`}
           sx={{ flexShrink: 0 }}
         >

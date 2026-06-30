@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { GOVERNANCE_TEXT_FIELD_CLASS } from '@canton-network/splice-common-frontend';
 import {
   Box,
   TextField as MuiTextField,
@@ -23,13 +24,20 @@ export const TextField: React.FC<TextFieldProps> = props => {
   const field = useFieldContext<string>();
   return (
     <Box>
-      <Typography variant="h6" id={`${id}-title`} data-testid={`${id}-title`} gutterBottom>
+      <Typography
+        variant="fieldLabel"
+        component="label"
+        id={`${id}-title`}
+        data-testid={`${id}-title`}
+        sx={{ mb: 1 }}
+      >
         {title}
       </Typography>
 
       <MuiTextField
         fullWidth
-        variant="outlined"
+        variant="filled"
+        className={GOVERNANCE_TEXT_FIELD_CLASS}
         autoComplete="off"
         value={field.state.value}
         onBlur={() => {
@@ -38,13 +46,21 @@ export const TextField: React.FC<TextFieldProps> = props => {
         }}
         error={!field.state.meta.isValid}
         helperText={
-          <Typography variant="caption" id={`${id}-error`} data-testid={`${id}-error`}>
+          <Typography
+            variant="caption"
+            component="span"
+            id={`${id}-error`}
+            data-testid={`${id}-error`}
+          >
             {field.state.meta.errors?.[0]}
           </Typography>
         }
         onChange={e => {
           field.handleChange(e.target.value);
           onChange?.(e.target.value);
+        }}
+        slotProps={{
+          input: { disableUnderline: true },
         }}
         inputProps={{ 'data-testid': id }}
         id={id}

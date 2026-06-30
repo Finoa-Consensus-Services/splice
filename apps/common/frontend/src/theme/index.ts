@@ -3,14 +3,40 @@
 import '@canton-network/splice-common-typeface-termina/index.css';
 
 import { createTheme, TypographyStyle } from '@mui/material';
+import type { Theme } from '@mui/material/styles';
 
 import { generateHslPalette, generateRemValue, stylePillButton } from './utils';
+import { designTokens } from './designTokens';
+import {
+  GOVERNANCE_SELECT_CLASS,
+  GOVERNANCE_TEXT_FIELD_CLASS,
+  GOVERNANCE_TABLE_CONTAINER_CLASS,
+  GOVERNANCE_TABLE_HEAD_CELL_CLASS,
+  governanceFieldStyles,
+  governanceFilledInputRootStyles,
+  governanceFormCardPadding,
+  governanceFormInnerSx,
+  governanceSelectRenderValueSx,
+  governancePaperStyles,
+  governanceTableBodyCellStyles,
+  governanceTableContainerStyles,
+  governanceTableHeadCellStyles,
+  governanceTypography,
+} from './governanceVariants';
 
 // TS module augmentation to add custom theme vars for storing our custom color values
 declare module '@mui/material/styles' {
   interface Theme {
     fonts: {
+      /** Inter — UI labels, buttons, nav, body */
       sansSerif: TypographyStyle;
+      /** Termina — brand / page titles */
+      brand: TypographyStyle;
+      /** Lato — section headings, table headers and cells */
+      section: TypographyStyle;
+      /** Source Code Pro — IDs, hashes, mono values */
+      mono: TypographyStyle;
+      /** @deprecated Use `fonts.brand` */
       monospace: TypographyStyle;
     };
   }
@@ -18,6 +44,9 @@ declare module '@mui/material/styles' {
   interface ThemeOptions {
     fonts?: {
       sansSerif: TypographyStyle;
+      brand: TypographyStyle;
+      section: TypographyStyle;
+      mono: TypographyStyle;
       monospace: TypographyStyle;
     };
   }
@@ -36,6 +65,18 @@ declare module '@mui/material/styles' {
       testnet: string;
       devnet: string;
       scratchnet: string;
+      /** Figma surface-page — bg-neutral-800 */
+      page: string;
+      /** Figma surface-card — bg-zinc-900 */
+      card: string;
+      /** Figma surface-input — bg-neutral-700 */
+      field: string;
+      fieldLabel: string;
+      fieldPlaceholder: string;
+      buttonDisabled: string;
+      buttonDisabledText: string;
+      /** Figma divider — outline-neutral-600 */
+      divider: string;
     };
   }
   // allow configuration using `createTheme`
@@ -49,6 +90,14 @@ declare module '@mui/material/styles' {
       testnet: string;
       devnet: string;
       scratchnet: string;
+      page?: string;
+      card?: string;
+      field?: string;
+      fieldLabel?: string;
+      fieldPlaceholder?: string;
+      buttonDisabled?: string;
+      buttonDisabledText?: string;
+      divider?: string;
     };
   }
 }
@@ -62,6 +111,21 @@ declare module '@mui/material/Button' {
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     pill: true;
+    fieldLabel: true;
+    fieldPlaceholder: true;
+    fieldValue: true;
+    pageTitle: true;
+    sectionHeading: true;
+    brandWordmark: true;
+    navItem: true;
+    networkBanner: true;
+    monoValue: true;
+  }
+}
+
+declare module '@mui/material/Paper' {
+  interface PaperPropsVariantOverrides {
+    'governance-card': true;
   }
 }
 
@@ -89,6 +153,7 @@ let theme = createTheme({
       testnet: '#C8F1FE',
       devnet: '#C6B2FF',
       scratchnet: '#FFFFFF',
+      ...designTokens,
     },
   },
 });
@@ -135,6 +200,18 @@ theme = createTheme(theme, {
       fontFamily: '"Inter", sans-serif',
       fontWeight: 400,
     },
+    brand: {
+      fontFamily: '"Termina", monospace',
+      fontWeight: 500,
+    },
+    section: {
+      fontFamily: '"Lato", sans-serif',
+      fontWeight: 400,
+    },
+    mono: {
+      fontFamily: '"Source Code Pro", monospace',
+      fontWeight: 400,
+    },
     monospace: {
       fontFamily: '"Termina", monospace',
       fontWeight: 500,
@@ -144,6 +221,15 @@ theme = createTheme(theme, {
 
 // Based on the Major Third type scale: https://typescale.com/?size=16&scale=1.250&text=A%20Visual%20Type%20Scale&font=Lato&fontweight=400&bodyfont=body_font_default&bodyfontweight=400&lineheight=1.75&backgroundcolor=%23ffffff&fontcolor=%23000000&preview=false
 const TYPE_SCALE = 1.25;
+
+const pillLargeStyles = {
+  textTransform: 'none',
+  fontSize: '16px',
+  minWidth: '5rem',
+  height: '2.5rem',
+  fontWeight: 500,
+  lineHeight: 1.25,
+};
 
 theme = createTheme(theme, {
   typography: {
@@ -189,6 +275,7 @@ theme = createTheme(theme, {
       fontSize: generateRemValue(-1, TYPE_SCALE),
     },
     overline: theme.fonts.sansSerif,
+    ...governanceTypography(theme),
   },
 });
 
@@ -228,35 +315,48 @@ theme = createTheme(theme, {
             },
           },
         },
-        // primary pill button
+        // primary pill button — must include color so secondary pills are not overridden
         stylePillButton(
           {
+            props: { variant: 'pill', color: 'primary' },
             bgColor: theme.palette.primary.main,
             bgHoverColor: theme.palette.primary.light,
-            bgDisableColor: theme.palette.colors.neutral[25],
+            bgDisableColor: theme.palette.colors.buttonDisabled,
+            textDisableColor: theme.palette.colors.buttonDisabledText,
+            disabledBorder: 'none',
             borderFocus: `2px solid ${theme.palette.primary.main}`,
             textColor: 'black',
           },
-          { textTransform: 'none', fontSize: '16px' }
+          pillLargeStyles
         ),
         // secondary pill button (border style)
-        stylePillButton({
-          props: { color: 'secondary' },
-          bgDisableColor: theme.palette.colors.neutral[25],
-          border: `1px solid ${theme.palette.secondary.main}`,
-          borderFocus: `2px solid ${theme.palette.secondary.main}`,
-          textColor: 'white',
-          textHoverColor: theme.palette.secondary.main,
-        }),
+        stylePillButton(
+          {
+            props: { variant: 'pill', color: 'secondary' },
+            bgColor: 'transparent',
+            bgHoverColor: 'transparent',
+            bgDisableColor: theme.palette.colors.neutral[25],
+            border: `1px solid ${theme.palette.secondary.main}`,
+            borderFocus: `2px solid ${theme.palette.secondary.main}`,
+            textColor: 'white',
+            textHoverColor: theme.palette.secondary.main,
+          },
+          pillLargeStyles
+        ),
         // warning pill button (border style)
-        stylePillButton({
-          props: { color: 'warning' },
-          bgDisableColor: theme.palette.colors.neutral[25],
-          border: `1px solid ${theme.palette.warning.main}`,
-          borderFocus: `2px solid ${theme.palette.warning.main}`,
-          textColor: 'white',
-          textHoverColor: theme.palette.warning.main,
-        }),
+        stylePillButton(
+          {
+            props: { variant: 'pill', color: 'warning' },
+            bgColor: 'transparent',
+            bgHoverColor: 'transparent',
+            bgDisableColor: theme.palette.colors.neutral[25],
+            border: `1px solid ${theme.palette.warning.main}`,
+            borderFocus: `2px solid ${theme.palette.warning.main}`,
+            textColor: 'white',
+            textHoverColor: theme.palette.warning.main,
+          },
+          pillLargeStyles
+        ),
         {
           props: { variant: 'outlined', color: 'secondary', size: 'small' },
           style: {
@@ -270,9 +370,12 @@ theme = createTheme(theme, {
         // primary pill button-like link
         stylePillButton(
           {
+            props: { variant: 'pill', color: 'primary' },
             bgColor: theme.palette.primary.main,
             bgHoverColor: theme.palette.primary.light,
-            bgDisableColor: theme.palette.colors.neutral[25],
+            bgDisableColor: theme.palette.colors.buttonDisabled,
+            textDisableColor: theme.palette.colors.buttonDisabledText,
+            disabledBorder: 'none',
             borderFocus: `2px solid ${theme.palette.primary.main}`,
             textColor: 'black',
           },
@@ -289,6 +392,44 @@ theme = createTheme(theme, {
         },
       },
     },
+    MuiPaper: {
+      variants: [
+        {
+          props: { variant: 'governance-card' },
+          style: governancePaperStyles(theme),
+        },
+      ],
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: ({ theme: t }: { theme: Theme }) => ({
+          [`&.${GOVERNANCE_SELECT_CLASS}`]: governanceFieldStyles(t),
+        }),
+      },
+    },
+    MuiTableContainer: {
+      styleOverrides: {
+        root: ({ theme: t }: { theme: Theme }) => ({
+          [`&.${GOVERNANCE_TABLE_CONTAINER_CLASS}`]: {
+            ...governanceTableContainerStyles(t),
+            [`& .MuiTableCell-root:not(.${GOVERNANCE_TABLE_HEAD_CELL_CLASS})`]:
+              governanceTableBodyCellStyles(t),
+          },
+        }),
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: ({ theme: t }: { theme: Theme }) => ({
+          [`&.${GOVERNANCE_TEXT_FIELD_CLASS} .MuiFilledInput-root`]:
+            governanceFilledInputRootStyles(t),
+          [`&.${GOVERNANCE_TEXT_FIELD_CLASS} .MuiInputBase-input::placeholder`]: {
+            color: t.palette.colors.fieldPlaceholder,
+            opacity: 1,
+          },
+        }),
+      },
+    },
     MuiCard: {
       styleOverrides: {
         root: {
@@ -300,16 +441,19 @@ theme = createTheme(theme, {
     },
     MuiTableCell: {
       styleOverrides: {
-        root: {
-          borderColor: theme.palette.colors.neutral[15],
+        root: ({ theme: t }: { theme: Theme }) => ({
+          borderColor: t.palette.colors.neutral[15],
           borderBottom: 'none',
-        },
+          [`&.${GOVERNANCE_TABLE_HEAD_CELL_CLASS}`]: governanceTableHeadCellStyles(t),
+        }),
         head: {
           fontSize: '12px',
           fontWeight: 700,
           textTransform: 'uppercase',
         },
-        variants: {
+      },
+      variants: [
+        {
           props: { variant: 'party' },
           style: {
             overflow: 'hidden',
@@ -317,7 +461,7 @@ theme = createTheme(theme, {
             whiteSpace: 'nowrap',
           },
         },
-      },
+      ],
     },
     MuiTab: {
       defaultProps: {
@@ -369,3 +513,12 @@ theme = createTheme(theme, {
 });
 
 export { theme };
+export {
+  GOVERNANCE_SELECT_CLASS,
+  GOVERNANCE_TEXT_FIELD_CLASS,
+  GOVERNANCE_TABLE_CONTAINER_CLASS,
+  GOVERNANCE_TABLE_HEAD_CELL_CLASS,
+  governanceFormCardPadding,
+  governanceFormInnerSx,
+  governanceSelectRenderValueSx,
+} from './governanceVariants';

@@ -161,14 +161,13 @@ interface ProposalFieldProps {
 const ProposalField: React.FC<ProposalFieldProps> = props => {
   const { id, title, subtitle, value } = props;
   return (
-    <Box sx={{ minWidth: '80%' }}>
+    <Box sx={{ mt: 4 }}>
       <Typography
-        variant="h5"
+        variant="fieldLabel"
+        component="label"
         id={`${id}-title`}
         data-testid={`${id}-title`}
-        gutterBottom
-        mb={1}
-        mt={4}
+        sx={{ mb: 1, display: 'block' }}
       >
         {title}
       </Typography>
@@ -186,7 +185,7 @@ const ProposalField: React.FC<ProposalFieldProps> = props => {
         )}
 
         {typeof value === 'string' ? (
-          <Typography variant="body2" data-testid={`${id}-field`} color="grey">
+          <Typography variant="fieldValue" data-testid={`${id}-field`}>
             {value}
           </Typography>
         ) : (
