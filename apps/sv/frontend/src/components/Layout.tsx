@@ -9,13 +9,23 @@ import {
 } from '@canton-network/splice-common-frontend';
 
 import { Logout } from '@mui/icons-material';
-import { Box, Button, Divider, Stack, Typography } from '@mui/material';
-import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
+import { Box, Container, Stack, Typography } from '@mui/material';
 
 import { useFeatureSupport } from '../contexts/SvContext';
 import { useNetworkInstanceName } from '../hooks/index';
 import { useSvConfig } from '../utils';
+
+/** Figma surface-page — single background for header, nav, and content. */
+const PAGE_BG = 'colors.page';
+
+/** Figma px-12 (48px) — shared horizontal padding for header and content. */
+const PAGE_PX = { xs: 2, md: 6 };
+
+/** Figma pb-9 (36px) — space below the nav row before page content. */
+const HEADER_PB = 4.5;
+
+/** Figma gap-7 (28px) — space between network banner and header nav row. */
+const BANNER_HEADER_GAP = 3.5;
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -47,48 +57,78 @@ const Layout: React.FC<LayoutProps> = (props: LayoutProps) => {
     { name: 'Governance', path: 'governance', badgeCount: actionsPending?.length },
   ];
 
-  return (
-    <Box bgcolor="colors.neutral.20" display="flex" flexDirection="column" minHeight="100vh">
-      {networkInstanceName === undefined ? (
-        <></>
-      ) : (
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-          sx={{
-            position: 'sticky',
-            top: 0,
-            zIndex: 1100,
-            backgroundColor: `${networkInstanceNameColor}`,
-            color: 'black',
-            height: '50px',
-            width: '100%',
-          }}
+  const networkBanner =
+    networkInstanceName === undefined ? null : (
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1100,
+          backgroundColor: networkInstanceNameColor,
+          color: '#18181b',
+          height: 48,
+          width: '100%',
+        }}
+      >
+        <Typography
+          id="network-instance-name"
+          data-testid="network-instance-name"
+          variant="networkBanner"
         >
-          <Typography id="network-instance-name" data-testid="network-instance-name" variant="h6">
-            <b>You are on {networkInstanceName} </b>
-          </Typography>
-        </Stack>
-      )}
-      <Container maxWidth="xl">
-        <Header title="Super Validator Operations" navLinks={navLinks}>
-          <Stack direction="row" alignItems="center" spacing={1} sx={{ flexShrink: 0 }}>
-            <Divider key="divider" orientation="vertical" variant="middle" flexItem />
-            <Button key="button" id="logout-button" onClick={logout} color="inherit">
-              <Stack direction="row" alignItems="center">
-                <Logout />
-                <Link color="inherit" textTransform="none">
-                  Logout
-                </Link>
-              </Stack>
-            </Button>
-          </Stack>
-        </Header>
-      </Container>
+          You are on {networkInstanceName}
+        </Typography>
+      </Stack>
+    );
 
-      <Box bgcolor="colors.neutral.15" sx={{ flex: 1 }}>
-        <Container maxWidth="xl">{props.children}</Container>
+  return (
+    <Box bgcolor={PAGE_BG} display="flex" flexDirection="column" minHeight="100vh">
+      <Stack
+        data-testid="layout-header-stack"
+        spacing={BANNER_HEADER_GAP}
+        sx={{ pb: HEADER_PB }}
+      >
+        {networkBanner}
+        <Container maxWidth="xl" disableGutters sx={{ px: PAGE_PX }}>
+          <Header variant="governance" title="Supervalidator Operations" navLinks={navLinks}>
+            <Box
+              component="button"
+              type="button"
+              id="logout-button"
+              data-testid="logout-button"
+              onClick={logout}
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 1.25,
+                flexShrink: 0,
+                p: 2.5,
+                border: 'none',
+                borderRadius: '20px',
+                background: 'none',
+                cursor: 'pointer',
+                color: 'common.white',
+                '&:hover': {
+                  color: 'common.white',
+                  background: 'none',
+                },
+              }}
+            >
+              <Logout sx={{ fontSize: 16 }} />
+              <Typography variant="navItem" component="span" sx={{ color: 'inherit' }}>
+                Logout
+              </Typography>
+            </Box>
+          </Header>
+        </Container>
+      </Stack>
+
+      <Box sx={{ flex: 1 }}>
+        <Container maxWidth="xl" disableGutters sx={{ px: PAGE_PX }}>
+          {props.children}
+        </Container>
       </Box>
     </Box>
   );

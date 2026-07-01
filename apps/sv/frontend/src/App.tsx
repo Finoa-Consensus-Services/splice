@@ -91,7 +91,7 @@ const App: React.FC = () => {
         }
       >
         <Route path="/" element={<Root />}>
-          <Route index element={<Dso />} />
+          <Route index element={<Navigate to="dso" replace />} />
           <Route path="dso" element={<Dso />} />
           <Route path="validator-onboarding" element={<ValidatorOnboarding />} />
           <Route path="amulet-price" element={<AmuletPrice />} />

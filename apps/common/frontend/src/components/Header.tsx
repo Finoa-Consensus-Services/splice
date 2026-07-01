@@ -4,92 +4,169 @@ import * as React from 'react';
 import { NavLink } from 'react-router';
 
 import { Warning } from '@mui/icons-material';
-import { Badge, Box, Stack, Toolbar } from '@mui/material';
+import { Badge, Box, Stack, Toolbar, useTheme } from '@mui/material';
 import Typography, { TypographyOwnProps } from '@mui/material/Typography';
+import type { Theme } from '@mui/material/styles';
+
+import NavCountBadge from './NavCountBadge';
 
 interface HeaderProps extends React.PropsWithChildren {
   title: string;
   titleVariant?: TypographyOwnProps['variant'];
   navLinks?: { name: string; path: string; badgeCount?: number; hasAlert?: boolean }[];
   noBorder?: boolean;
+  /** Figma top nav from CF-design-system (initiate-proposal-1.html). */
+  variant?: 'default' | 'governance';
 }
 
-const Header: React.FC<HeaderProps> = ({ children, title, titleVariant, navLinks, noBorder }) => {
-  const applyNavStyle = (isActive: boolean): React.CSSProperties => ({
-    color: 'white',
-    textDecoration: isActive ? 'underline' : 'none',
-    whiteSpace: 'nowrap',
-  });
+const navPillStyle = (theme: Theme, isActive: boolean): React.CSSProperties => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '6px',
+  padding: '10px',
+  borderRadius: '20px',
+  textDecoration: 'none',
+  whiteSpace: 'nowrap',
+  color: theme.palette.colors.fieldLabel,
+  outline: isActive ? `2px solid ${theme.palette.colors.tertiary}` : 'none',
+});
+
+const Header: React.FC<HeaderProps> = ({
+  children,
+  title,
+  titleVariant,
+  navLinks,
+  noBorder,
+  variant = 'default',
+}) => {
+  const theme = useTheme();
+  const isGovernance = variant === 'governance';
+
+  const applyNavStyle = (isActive: boolean): React.CSSProperties =>
+    isGovernance
+      ? navPillStyle(theme, isActive)
+      : {
+          color: 'white',
+          textDecoration: isActive ? 'underline' : 'none',
+          whiteSpace: 'nowrap',
+        };
 
   return (
-    <>
-      <Toolbar
-        sx={{
-          borderBottom: noBorder ? 0 : 1,
-          borderColor: 'divider',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: { xs: 0, sm: 0, md: 0, lg: 0, xl: 0 },
-        }}
-      >
+    <Toolbar
+      disableGutters
+      sx={{
+        borderBottom: isGovernance || noBorder ? 0 : 1,
+        borderColor: 'divider',
+        display: 'flex',
+        justifyContent: isGovernance ? 'flex-start' : 'space-between',
+        alignItems: 'center',
+        flexWrap: isGovernance ? { xs: 'wrap', lg: 'nowrap' } : undefined,
+        // Figma gap-36 (144px) between brand, nav cluster, and logout zones.
+        // Scales down below xl where the 1880px frame content does not fit.
+        gap: { xs: 2, md: isGovernance ? 10 : 2, xl: isGovernance ? 18 : 2 },
+        py: isGovernance ? 1 : 0,
+        minHeight: isGovernance ? 'auto' : undefined,
+      }}
+    >
+      <Box sx={{ p: isGovernance ? 2.5 : 0, flexShrink: 0 }}>
         <Typography
           id="app-title"
-          textTransform="uppercase"
-          variant={titleVariant || 'h5'}
-          fontFamily={theme => theme.fonts.monospace.fontFamily}
-          fontWeight={theme => theme.fonts.monospace.fontWeight}
-          sx={{ flexShrink: 0, textWrap: 'balance', marginRight: 2 }}
+          variant={isGovernance ? 'brandWordmark' : titleVariant || 'h5'}
+          textTransform={isGovernance ? 'none' : 'uppercase'}
+          fontFamily={isGovernance ? undefined : theme => theme.fonts.monospace.fontFamily}
+          fontWeight={isGovernance ? undefined : theme => theme.fonts.monospace.fontWeight}
+          sx={{ textWrap: 'balance' }}
         >
           {title}
         </Typography>
+      </Box>
 
-        {navLinks && (
-          <Stack
-            direction="row"
-            spacing={3}
-            alignItems="center"
-            justifyContent="space-evenly"
-            sx={{ flex: 1 }}
-          >
-            {navLinks.map((navLink, index) => (
-              <Box key={`nav-link-${index}`}>
-                <NavLink
-                  key={index}
-                  id={`navlink-${navLink.path}`}
-                  data-testid={`navlink-${navLink.path}`}
-                  to={navLink.path}
-                  style={p => applyNavStyle(p.isActive)}
-                >
-                  {navLink.name}
+      {navLinks && (
+        <Stack
+          component="nav"
+          aria-label="Primary"
+          direction="row"
+          spacing={isGovernance ? 7 : 3}
+          alignItems="center"
+          justifyContent={isGovernance ? 'flex-start' : 'space-evenly'}
+          sx={{
+            flex: isGovernance ? '0 0 auto' : 1,
+            flexWrap: 'wrap',
+          }}
+        >
+          {navLinks.map((navLink, index) => (
+            <Box key={`nav-link-${index}`}>
+              <NavLink
+                id={`navlink-${navLink.path}`}
+                data-testid={`navlink-${navLink.path}`}
+                to={navLink.path}
+                style={({ isActive }) => applyNavStyle(isActive)}
+              >
+                {({ isActive }) => (
+                  <>
+                    <Typography
+                      component="span"
+                      variant={isGovernance ? 'navItem' : undefined}
+                      sx={{
+                        color: 'inherit',
+                        textDecoration: 'inherit',
+                        ...(isGovernance ? {} : { fontWeight: 700 }),
+                      }}
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      {navLink.name}
+                    </Typography>
 
-                  {navLink.badgeCount ? (
-                    <Badge
-                      key={`nav-badge-${index}`}
-                      id={`nav-badge-${navLink.path}-count`}
-                      color="error"
-                      badgeContent={navLink.badgeCount}
-                      sx={{ marginLeft: 2 }}
-                    />
-                  ) : navLink.hasAlert ? (
-                    <Badge
-                      key={`nav-alert-badge-${index}`}
-                      id={`nav-badge-${navLink.path}-alert`}
-                      badgeContent={
-                        <Warning fontSize="small" color="secondary" sx={{ marginLeft: 3 }} />
-                      }
-                    />
-                  ) : (
-                    <></>
-                  )}
-                </NavLink>
-              </Box>
-            ))}
-          </Stack>
-        )}
-        {children}
-      </Toolbar>
-    </>
+                    {navLink.badgeCount ? (
+                      isGovernance ? (
+                        <NavCountBadge
+                          id={`nav-badge-${navLink.path}-count`}
+                          count={navLink.badgeCount}
+                        />
+                      ) : (
+                        <Badge
+                          id={`nav-badge-${navLink.path}-count`}
+                          color="error"
+                          badgeContent={navLink.badgeCount}
+                          sx={{
+                            ml: 2,
+                            '& .MuiBadge-badge': {
+                              position: 'static',
+                              transform: 'none',
+                              fontSize: '0.75rem',
+                              fontWeight: 400,
+                              minWidth: 20,
+                              height: 20,
+                              borderRadius: '12px',
+                            },
+                          }}
+                        />
+                      )
+                    ) : navLink.hasAlert ? (
+                      <Badge
+                        id={`nav-badge-${navLink.path}-alert`}
+                        badgeContent={
+                          <Warning
+                            fontSize="small"
+                            color="secondary"
+                            sx={{ ml: isGovernance ? 0 : 3 }}
+                          />
+                        }
+                        sx={{
+                          ml: isGovernance ? 0 : 2,
+                          '& .MuiBadge-badge': { position: 'static', transform: 'none', p: 0, bg: 'transparent' },
+                        }}
+                      />
+                    ) : null}
+                  </>
+                )}
+              </NavLink>
+            </Box>
+          ))}
+        </Stack>
+      )}
+      {children ? <Box sx={{ flexShrink: 0 }}>{children}</Box> : null}
+    </Toolbar>
   );
 };
 

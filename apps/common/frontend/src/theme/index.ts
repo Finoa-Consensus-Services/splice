@@ -5,12 +5,16 @@ import '@canton-network/splice-common-typeface-termina/index.css';
 import { createTheme, TypographyStyle } from '@mui/material';
 
 import { generateHslPalette, generateRemValue, stylePillButton } from './utils';
+import { designTokens } from './designTokens';
+import { governanceTypography } from './governanceVariants';
 
 // TS module augmentation to add custom theme vars for storing our custom color values
 declare module '@mui/material/styles' {
   interface Theme {
     fonts: {
       sansSerif: TypographyStyle;
+      brand: TypographyStyle;
+      /** @deprecated Use `fonts.brand` */
       monospace: TypographyStyle;
     };
   }
@@ -18,6 +22,7 @@ declare module '@mui/material/styles' {
   interface ThemeOptions {
     fonts?: {
       sansSerif: TypographyStyle;
+      brand: TypographyStyle;
       monospace: TypographyStyle;
     };
   }
@@ -36,6 +41,9 @@ declare module '@mui/material/styles' {
       testnet: string;
       devnet: string;
       scratchnet: string;
+      /** Figma surface-page — bg-neutral-800 */
+      page: string;
+      fieldLabel: string;
     };
   }
   // allow configuration using `createTheme`
@@ -49,6 +57,8 @@ declare module '@mui/material/styles' {
       testnet: string;
       devnet: string;
       scratchnet: string;
+      page?: string;
+      fieldLabel?: string;
     };
   }
 }
@@ -62,6 +72,9 @@ declare module '@mui/material/Button' {
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
     pill: true;
+    brandWordmark: true;
+    navItem: true;
+    networkBanner: true;
   }
 }
 
@@ -89,6 +102,8 @@ let theme = createTheme({
       testnet: '#C8F1FE',
       devnet: '#C6B2FF',
       scratchnet: '#FFFFFF',
+      page: designTokens.page,
+      fieldLabel: designTokens.fieldLabel,
     },
   },
 });
@@ -134,6 +149,10 @@ theme = createTheme(theme, {
     sansSerif: {
       fontFamily: '"Inter", sans-serif',
       fontWeight: 400,
+    },
+    brand: {
+      fontFamily: '"Termina", monospace',
+      fontWeight: 500,
     },
     monospace: {
       fontFamily: '"Termina", monospace',
@@ -189,6 +208,7 @@ theme = createTheme(theme, {
       fontSize: generateRemValue(-1, TYPE_SCALE),
     },
     overline: theme.fonts.sansSerif,
+    ...governanceTypography(theme),
   },
 });
 
