@@ -1,18 +1,17 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-
-import {
-  Box,
-  Button,
-  FormControl,
-  MenuItem,
-  Paper,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from '@mui/material';
+import { Box } from '@mui/material';
 import { useForm } from '@tanstack/react-form';
 import { useNavigate } from 'react-router';
+
+import { ProposalTypeSelect } from '../actionSelection/ProposalTypeSelect';
+import { SvPrimaryButton, SvSecondaryButton } from '../ui/SvButton';
+import {
+  ACTION_SELECTION_BUTTON_GAP,
+  ACTION_SELECTION_CARD_PY,
+  ACTION_SELECTION_FIELD_GAP,
+  formTokens,
+} from '../../theme/tokens';
 import { createProposalActions } from '../../utils/governance';
 
 export const SelectAction: React.FC = () => {
@@ -20,7 +19,7 @@ export const SelectAction: React.FC = () => {
 
   const form = useForm({
     defaultValues: {
-      action: '',
+      action: createProposalActions[0].value,
     },
     onSubmit: async ({ value }) => {
       navigate(`/governance/proposals/create?action=${value.action}`);
@@ -33,92 +32,79 @@ export const SelectAction: React.FC = () => {
   };
 
   return (
-    <Box>
-      <Paper
+    <Box
+      sx={{
+        bgcolor: formTokens.surfaceCard,
+        borderRadius: formTokens.radiusCard,
+        py: ACTION_SELECTION_CARD_PY,
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
+      <Box
+        component="form"
+        onSubmit={e => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }}
         sx={{
-          bgcolor: 'background.paper',
-          p: 4,
+          width: '100%',
+          maxWidth: formTokens.fieldMaxWidth,
           display: 'flex',
-          justifyContent: 'center',
+          flexDirection: 'column',
           alignItems: 'center',
+          gap: ACTION_SELECTION_FIELD_GAP,
         }}
       >
-        <Box sx={{ minWidth: '60%' }}>
-          <Typography sx={{ mb: 2 }} variant="h3">
-            Select an Action
-          </Typography>
-
-          <form
-            onSubmit={e => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
-            }}
-          >
-            <form.Field
-              name="action"
-              validators={{
-                onMount: ({ value }) => {
-                  const res = createProposalActions.find(a => a.value === value);
-                  return res ? undefined : 'Invalid action';
-                },
-              }}
-              children={field => (
-                <FormControl fullWidth>
-                  <Select
-                    labelId="select-action-label"
-                    id="select-action"
-                    data-testid="select-action"
-                    value={field.state.value}
-                    onChange={(e: SelectChangeEvent) =>
-                      field.handleChange(e.target.value as string)
-                    }
-                    onBlur={field.handleBlur}
-                  >
-                    {createProposalActions.map(actionName => (
-                      <MenuItem
-                        key={actionName.value}
-                        value={actionName.value}
-                        data-testid={actionName.value}
-                      >
-                        {actionName.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
+        <form.Field
+          name="action"
+          validators={{
+            onMount: ({ value }) => {
+              const res = createProposalActions.find(a => a.value === value);
+              return res ? undefined : 'Invalid action';
+            },
+          }}
+          children={field => (
+            <ProposalTypeSelect
+              value={field.state.value}
+              onChange={field.handleChange}
+              onBlur={field.handleBlur}
             />
+          )}
+        />
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
-              <form.Subscribe
-                selector={state => state.canSubmit}
-                children={canSubmit => (
-                  <>
-                    <Button
-                      variant="outlined"
-                      data-testid="cancel-button"
-                      onClick={handleCancel}
-                      type="button"
-                    >
-                      Cancel
-                    </Button>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: ACTION_SELECTION_BUTTON_GAP,
+          }}
+        >
+          <SvSecondaryButton
+            data-testid="cancel-button"
+            onClick={handleCancel}
+            type="button"
+          >
+            Cancel
+          </SvSecondaryButton>
 
-                    <Button
-                      variant="contained"
-                      id="next-button"
-                      data-testid="next-button"
-                      type="submit"
-                      disabled={!canSubmit}
-                    >
-                      Next
-                    </Button>
-                  </>
-                )}
-              />
-            </Box>
-          </form>
+          <form.Subscribe
+            selector={state => state.canSubmit}
+            children={canSubmit => (
+              <SvPrimaryButton
+                id="next-button"
+                data-testid="next-button"
+                type="submit"
+                disabled={!canSubmit}
+              >
+                Next
+              </SvPrimaryButton>
+            )}
+          />
         </Box>
-      </Paper>
+      </Box>
     </Box>
   );
 };
