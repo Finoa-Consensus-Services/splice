@@ -4,7 +4,14 @@ import * as React from 'react';
 
 import { Box, Stack, Typography } from '@mui/material';
 
-import { BRAND_TITLE, layoutTokens, NAV_GAP, NAV_PILL_PX, ZONE_GAP } from '../../theme/tokens';
+import {
+  BRAND_TITLE,
+  layoutTokens,
+  NAV_GAP,
+  NAV_PILL_PX,
+  NAV_ROW_MIN_HEIGHT,
+  ZONE_GAP,
+} from '../../theme/tokens';
 import LogoutButton from './LogoutButton';
 import SvNavLink, { SvNavLinkItem } from './SvNavLink';
 
@@ -23,7 +30,7 @@ const SvTopNav: React.FC<SvTopNavProps> = ({ navLinks, onLogout }) => (
     alignItems="center"
     sx={{
       width: '100%',
-      minHeight: 40,
+      minHeight: NAV_ROW_MIN_HEIGHT,
     }}
   >
     <Stack
@@ -45,7 +52,7 @@ const SvTopNav: React.FC<SvTopNavProps> = ({ navLinks, onLogout }) => (
             fontWeight: 500,
             lineHeight: 'normal',
             fontFeatureSettings: "'liga' off, 'clig' off",
-            color: layoutTokens.brandText,
+            color: layoutTokens.lightText,
           }}
         >
           {BRAND_TITLE}

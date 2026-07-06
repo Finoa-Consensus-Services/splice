@@ -7,10 +7,8 @@ export const layoutTokens = {
   page: '#262626',
   /** Figma Dev Mode Background-lighter on Navigation component */
   navBackground: '#272727',
-  /** Figma text-neutral-200 — nav labels */
-  fieldLabel: '#e5e5e5',
-  /** Figma Dev Mode --Light-text for brand wordmark */
-  brandText: '#E2E2E2',
+  /** Figma Dev Mode --Light-text — brand wordmark and nav labels */
+  lightText: '#E2E2E2',
   /** Figma banner-testnet — bg-cyan-100 (styled export uses #C8F1FE) */
   bannerTestnet: '#cffafe',
   bannerText: '#18181b',
@@ -22,8 +20,8 @@ export const layoutTokens = {
   fontUi: '"Inter", sans-serif',
 } as const;
 
-/** Figma px-12 — 48px horizontal inset */
-export const PAGE_PX = 6;
+/** Figma Dev Mode — nav row horizontal padding 50px */
+export const PAGE_PX = '50px';
 
 /** Figma p-2.5 — 10px padding on brand box and nav pills */
 export const NAV_PILL_PX = '10px';
@@ -37,10 +35,22 @@ export const HEADER_PB = 4.5;
 /** Figma Dev Mode — 30px gap between banner and nav row (Navigation component) */
 export const BANNER_HEADER_GAP = 3.75;
 
-/** Figma gap-36 — max 144px between brand, nav, logout */
-export const ZONE_GAP = 'clamp(12px, 4vw, 144px)';
+/** Figma Dev Mode — 145px between brand wordmark and nav cluster */
+export const ZONE_GAP = 'clamp(12px, 4vw, 145px)';
 
-/** Figma gap-14 — max 56px between nav pills */
-export const NAV_GAP = 'clamp(8px, 1.5vw, 56px)';
+/** Figma Dev Mode — 60px between nav pills */
+export const NAV_GAP = 'clamp(8px, 1.5vw, 60px)';
+
+/** Figma Dev Mode — nav row height 44px */
+export const NAV_ROW_MIN_HEIGHT = 44;
+
+/** Figma Dev Mode — banner height 50px */
+export const BANNER_MIN_HEIGHT = 50;
+
+/** Figma Dev Mode — Inter nav/logout typography */
+export const navItemTypography = {
+  fontFeatureSettings: "'liga' off, 'clig' off",
+  lineHeight: 'normal',
+} as const;
 
 export const BRAND_TITLE = 'Supervalidator Operations';

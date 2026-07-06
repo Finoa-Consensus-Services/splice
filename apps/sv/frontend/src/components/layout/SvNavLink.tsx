@@ -5,7 +5,7 @@ import { NavLink } from 'react-router';
 
 import { Box } from '@mui/material';
 
-import { layoutTokens, NAV_PILL_PX } from '../../theme/tokens';
+import { layoutTokens, navItemTypography, NAV_PILL_PX } from '../../theme/tokens';
 import NavAttentionIcon from './NavAttentionIcon';
 import NavCountBadge from './NavCountBadge';
 
@@ -30,11 +30,11 @@ const navLinkSx = (isActive: boolean) => ({
   borderRadius: '20px',
   textDecoration: 'none',
   whiteSpace: 'nowrap',
-  color: layoutTokens.fieldLabel,
+  color: layoutTokens.lightText,
   fontFamily: layoutTokens.fontUi,
   fontSize: '0.875rem',
   fontWeight: 700,
-  lineHeight: 1.25,
+  ...navItemTypography,
   border: '2px solid transparent',
   boxSizing: 'border-box',
   ...(isActive && { borderColor: layoutTokens.navActiveOutline }),

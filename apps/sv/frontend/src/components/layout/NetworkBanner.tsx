@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { Stack, Typography } from '@mui/material';
 
-import { layoutTokens } from '../../theme/tokens';
+import { BANNER_MIN_HEIGHT, layoutTokens } from '../../theme/tokens';
 
 interface NetworkBannerProps {
   networkName: string;
@@ -24,7 +24,7 @@ const NetworkBanner: React.FC<NetworkBannerProps> = ({ networkName, dsoPartyId }
       zIndex: 1100,
       bgcolor: layoutTokens.bannerTestnet,
       color: layoutTokens.bannerText,
-      minHeight: 48,
+      minHeight: BANNER_MIN_HEIGHT,
       py: 1,
       width: '100%',
     }}

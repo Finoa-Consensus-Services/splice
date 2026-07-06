@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { Button, Stack, Typography } from '@mui/material';
 
-import { layoutTokens, NAV_PILL_PX } from '../../theme/tokens';
+import { layoutTokens, navItemTypography, NAV_PILL_PX } from '../../theme/tokens';
 import LogoutIcon from './LogoutIcon';
 
 interface LogoutButtonProps {
@@ -20,7 +20,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => (
       flexShrink: 0,
       p: NAV_PILL_PX,
       minWidth: 0,
-      color: 'common.white',
+      color: layoutTokens.lightText,
       textTransform: 'none',
       '&:hover': { bgcolor: 'transparent', opacity: 0.85 },
     }}
@@ -33,7 +33,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => (
           fontFamily: layoutTokens.fontUi,
           fontSize: '0.875rem',
           fontWeight: 700,
-          lineHeight: 1.25,
+          ...navItemTypography,
         }}
       >
         Logout
