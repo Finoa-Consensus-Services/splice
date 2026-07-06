@@ -81,7 +81,7 @@
     "start": "vite --force",
     "test": "PORT=0 vitest",
     "test:sbt": "PORT=0 vitest --run",
-    "copy-msw": "cp ../../common/frontend/public/mockServiceWorker.js public/",
+    "copy-msw": "npx msw init public/ --save",
     "dev": "npm run copy-msw && vite --mode testing --force"
   },
   "msw": {

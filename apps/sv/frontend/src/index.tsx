@@ -12,11 +12,17 @@ import { SvConfigProvider } from './utils';
 
 async function deferRender() {
   if (import.meta.env.MODE === 'testing') {
-    await worker.start();
+    await worker.start({ onUnhandledRequest: 'bypass' });
   }
 }
 
-deferRender().then(() => {
+deferRender().catch(error => {
+  console.error(
+    '[SV mock dev] MSW failed to start. Run `npm run dev` (not `npm start`), then unregister stale service workers in DevTools → Application → Service Workers.',
+    error
+  );
+  throw error;
+}).then(() => {
   ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
       <ErrorBoundary>
