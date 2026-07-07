@@ -51,6 +51,8 @@ const SvTopNav: React.FC<SvTopNavProps> = ({ navLinks, onLogout }) => (
             fontSize: '1.25rem',
             fontWeight: 500,
             lineHeight: 'normal',
+            /** Figma: Letter spacing 0px — Typography's body1 default (0.00938em) otherwise leaks in. */
+            letterSpacing: 0,
             fontFeatureSettings: "'liga' off, 'clig' off",
             color: layoutTokens.lightText,
           }}

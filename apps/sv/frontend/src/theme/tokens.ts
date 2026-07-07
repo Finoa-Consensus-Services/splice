@@ -1,6 +1,10 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+// SV-local Termina @font-face (weight 500-700) — see fonts.css for why this exists
+// alongside @canton-network/splice-common-typeface-termina.
+import './fonts.css';
+
 /** Figma tokens from CF-design-system (tokens.md + delegate-election-2 Dev Mode). */
 export const layoutTokens = {
   /** Figma surface-page — bg-neutral-800 */
@@ -47,10 +51,17 @@ export const NAV_ROW_MIN_HEIGHT = 44;
 /** Figma Dev Mode — banner height 50px */
 export const BANNER_MIN_HEIGHT = 50;
 
-/** Figma Dev Mode — Inter nav/logout typography */
+/**
+ * Figma Dev Mode — Inter nav/logout typography (letter spacing: 0px).
+ * Without an explicit `letterSpacing` reset, these Box/Typography elements inherit
+ * MUI's default body1 letter-spacing (0.00938em) from an ancestor, rendering as a
+ * ~0.13-0.15px leak that's invisible in a screenshot but measurable via computed
+ * styles and doesn't match Figma's 0px spec.
+ */
 export const navItemTypography = {
   fontFeatureSettings: "'liga' off, 'clig' off",
   lineHeight: 'normal',
+  letterSpacing: 0,
 } as const;
 
 export const BRAND_TITLE = 'Supervalidator Operations';

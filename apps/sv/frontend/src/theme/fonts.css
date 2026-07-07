@@ -1,0 +1,23 @@
+/* Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/**
+ * SV-local Termina font-face.
+ *
+ * @canton-network/splice-common-typeface-termina registers the same file at
+ * `font-weight: 700` and an invalid `font-style: bold` (font-style only accepts
+ * normal/italic/oblique, so that descriptor is silently ignored). Since the SV
+ * nav bar's brand wordmark requests `font-weight: 500` (Figma Dev Mode), text
+ * still renders in Termina but the weight mismatch is undocumented at the CSS
+ * level. This re-registers the same bundled file locally, scoped to apps/sv
+ * (no apps/common changes), declaring the weight range it actually covers and
+ * a valid font-style. This does not change how the glyphs look — there is no
+ * true Medium-weight Termina file available anywhere in this design system —
+ * it only makes the weight-matching metadata correct and self-contained.
+ */
+@font-face {
+  font-family: 'Termina';
+  src: url('../assets/fonts/Termina-Bold.woff') format('woff');
+  font-weight: 500 700;
+  font-style: normal;
+}
