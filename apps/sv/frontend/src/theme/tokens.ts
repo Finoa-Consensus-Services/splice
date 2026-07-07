@@ -1,8 +1,8 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// SV-local Termina @font-face (weight 500-700) — see fonts.css for why this exists
-// alongside @canton-network/splice-common-typeface-termina.
+// SV-local Termina @font-face (Medium 500 + Bold 700) — see fonts.css for why this
+// exists alongside @canton-network/splice-common-typeface-termina.
 import './fonts.css';
 
 /** Figma tokens from CF-design-system (tokens.md + delegate-election-2 Dev Mode). */

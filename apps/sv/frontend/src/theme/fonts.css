@@ -2,22 +2,31 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 
 /**
- * SV-local Termina font-face.
+ * SV-local Termina font-faces.
  *
- * @canton-network/splice-common-typeface-termina registers the same file at
- * `font-weight: 700` and an invalid `font-style: bold` (font-style only accepts
- * normal/italic/oblique, so that descriptor is silently ignored). Since the SV
- * nav bar's brand wordmark requests `font-weight: 500` (Figma Dev Mode), text
- * still renders in Termina but the weight mismatch is undocumented at the CSS
- * level. This re-registers the same bundled file locally, scoped to apps/sv
- * (no apps/common changes), declaring the weight range it actually covers and
- * a valid font-style. This does not change how the glyphs look — there is no
- * true Medium-weight Termina file available anywhere in this design system —
- * it only makes the weight-matching metadata correct and self-contained.
+ * @canton-network/splice-common-typeface-termina only bundles Termina Bold at
+ * `font-weight: 700` (with an invalid `font-style: bold`, silently ignored by
+ * browsers). The SV brand wordmark needs `font-weight: 500` (Figma Dev Mode),
+ * and until now no true Medium-weight Termina artwork existed anywhere in this
+ * design system, so 500 rendered as bold via a weight-range hack.
+ *
+ * These are the real Termina Medium/Bold weights (licensed test files from
+ * Fort Foundry, see assets/fonts/termina/ — the full 9-weight family is kept
+ * there for future use, but only the two weights this app actually renders
+ * are registered below), scoped to apps/sv (no apps/common changes). This is
+ * the first time an actual Medium glyph set has been wired up — 500 now
+ * renders visibly lighter than 700.
  */
 @font-face {
   font-family: 'Termina';
-  src: url('../assets/fonts/Termina-Bold.woff') format('woff');
-  font-weight: 500 700;
+  src: url('../assets/fonts/termina/TerminaTest-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Termina';
+  src: url('../assets/fonts/termina/TerminaTest-Bold.otf') format('opentype');
+  font-weight: 700;
   font-style: normal;
 }
