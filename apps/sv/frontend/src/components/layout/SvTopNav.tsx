@@ -50,7 +50,13 @@ const SvTopNav: React.FC<SvTopNavProps> = ({ navLinks, onLogout }) => (
             fontFamily: layoutTokens.fontBrand,
             fontSize: '1.25rem',
             fontWeight: 500,
-            lineHeight: 'normal',
+            /**
+             * Figma: Line height 100% (an explicit override, not "Auto") — i.e. exactly
+             * 1x font-size (20px). `line-height: normal` instead falls back to Termina's
+             * own font metrics, which render at ~120% (24px), 4px taller than spec.
+             * Unitless `1` scales with fontSize and matches Figma's 100% exactly.
+             */
+            lineHeight: 1,
             /** Figma: Letter spacing 0px — Typography's body1 default (0.00938em) otherwise leaks in. */
             letterSpacing: 0,
             fontFeatureSettings: "'liga' off, 'clig' off",
