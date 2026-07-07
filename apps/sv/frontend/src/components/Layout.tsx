@@ -79,6 +79,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   const pageName = pathnameToPageName(location.pathname);
+  const networkName =
+    networkInstanceName ?? config.spliceInstanceNames.networkName;
 
   return (
     <Box
@@ -87,9 +89,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       flexDirection="column"
       minHeight="100vh"
     >
-      {networkInstanceName !== undefined && dsoPartyId !== undefined ? (
+      {dsoPartyId !== undefined ? (
         <SvNavigationShell
-          networkName={networkInstanceName}
+          networkName={networkName}
           dsoPartyId={dsoPartyId}
           navLinks={navLinks}
           onLogout={logout}

@@ -13,6 +13,7 @@ import {
   formTokens,
 } from '../../theme/tokens';
 import { createProposalActions } from '../../utils/governance';
+import type { SupportedActionTag } from '../../utils/types';
 
 export const SelectAction: React.FC = () => {
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ export const SelectAction: React.FC = () => {
           children={field => (
             <ProposalTypeSelect
               value={field.state.value}
-              onChange={field.handleChange}
+              onChange={value => field.handleChange(value as SupportedActionTag)}
               onBlur={field.handleBlur}
             />
           )}

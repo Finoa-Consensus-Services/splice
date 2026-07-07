@@ -6,11 +6,7 @@ import { Button, ButtonProps } from '@mui/material';
 
 import { formTokens } from '../../theme/tokens';
 
-type SvButtonVariant = 'primary' | 'secondary';
-
-type SvButtonProps = Omit<ButtonProps, 'variant' | 'color'> & {
-  variant?: SvButtonVariant;
-};
+type SvButtonProps = Omit<ButtonProps, 'variant' | 'color'>;
 
 const baseSx = {
   px: 2,
@@ -24,7 +20,7 @@ const baseSx = {
   minWidth: 80,
 };
 
-const variantSx: Record<SvButtonVariant, object> = {
+const variantSx: Record<'primary' | 'secondary', object> = {
   primary: {
     bgcolor: formTokens.accentPrimary,
     color: formTokens.textOnPrimary,
@@ -46,11 +42,7 @@ const variantSx: Record<SvButtonVariant, object> = {
   },
 };
 
-export const SvPrimaryButton: React.FC<SvButtonProps> = ({
-  variant: _variant = 'primary',
-  sx,
-  ...props
-}) => (
+export const SvPrimaryButton: React.FC<SvButtonProps> = ({ sx, ...props }) => (
   <Button {...props} sx={{ ...baseSx, ...variantSx.primary, ...sx }} />
 );
 
