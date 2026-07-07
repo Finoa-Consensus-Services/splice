@@ -45,15 +45,16 @@ describe('SV user can', () => {
     userEvent.setup();
     render(<AppWithConfig />);
 
-    await screen.findByText('You are on ScratchNet');
+    const dsoPartyId = dsoInfo.dso_party_id.replace(/^DSO::/, '');
+    await screen.findByText(`ScratchNet · ID: ${dsoPartyId}`);
   });
 
   test('browse to the validator onboarding tab', async () => {
     const user = userEvent.setup();
     render(<AppWithConfig />);
 
-    expect(await screen.findByText('Validator Onboarding')).toBeDefined();
-    await user.click(screen.getByText('Validator Onboarding'));
+    expect(await screen.findByText('Validators')).toBeDefined();
+    await user.click(screen.getByText('Validators'));
 
     expect(await screen.findByText('Validator Onboarding Secrets')).toBeDefined();
   });
@@ -62,8 +63,8 @@ describe('SV user can', () => {
     const user = userEvent.setup();
     render(<AppWithConfig />);
 
-    expect(await screen.findByText('Validator Onboarding')).toBeDefined();
-    await user.click(screen.getByText('Validator Onboarding'));
+    expect(await screen.findByText('Validators')).toBeDefined();
+    await user.click(screen.getByText('Validators'));
 
     const partyHintInput = screen.getByTestId('create-party-hint');
     await user.type(partyHintInput, 'wrong-input');
@@ -303,8 +304,8 @@ describe('An AddFutureAmuletConfigSchedule request', () => {
     const user = userEvent.setup();
     render(<AppWithConfig />);
 
-    expect(await screen.findByText('Validator Onboarding')).toBeDefined();
-    await user.click(screen.getByText('Validator Onboarding'));
+    expect(await screen.findByText('Validators')).toBeDefined();
+    await user.click(screen.getByText('Validators'));
 
     expect(await screen.findByText('Validator Licenses')).toBeDefined();
 

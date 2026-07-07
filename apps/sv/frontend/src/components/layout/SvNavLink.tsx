@@ -22,10 +22,11 @@ interface SvNavLinkProps {
   link: SvNavLinkItem;
 }
 
-const navLinkSx = (isActive: boolean) => ({
+/** Figma: badge accessory uses gap-1.5 (6px), alert-icon accessory uses gap-2.5 (10px). */
+const navLinkSx = (isActive: boolean, accessoryGap: string) => ({
   display: 'inline-flex',
   alignItems: 'center',
-  gap: '6px',
+  gap: accessoryGap,
   p: NAV_PILL_PX,
   borderRadius: '20px',
   textDecoration: 'none',
@@ -55,7 +56,7 @@ const SvNavLink: React.FC<SvNavLinkProps> = ({ link }) => (
     style={{ textDecoration: 'none' }}
   >
     {({ isActive }) => (
-      <Box sx={navLinkSx(isActive)}>
+      <Box sx={navLinkSx(isActive, link.hasAlert ? '10px' : '6px')}>
         {link.name}
         {link.badgeCount !== undefined && link.badgeCount > 0 ? (
           <NavCountBadge

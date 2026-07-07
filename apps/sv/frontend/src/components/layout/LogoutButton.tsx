@@ -33,6 +33,8 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => (
           fontFamily: layoutTokens.fontUi,
           fontSize: '0.875rem',
           fontWeight: 700,
+          /** Figma: Logout label is text-white, unlike the text-neutral-200 used elsewhere in the nav. */
+          color: 'common.white',
           ...navItemTypography,
         }}
       >

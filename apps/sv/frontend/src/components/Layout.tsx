@@ -75,7 +75,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     },
     { name: `${config.spliceInstanceNames.amuletName} Price`, path: '/amulet-price' },
     { name: 'Validators', path: '/validator-onboarding' },
-    { name: 'Delegate Election', path: '/delegate-election', hasAlert: false },
+    /**
+     * Figma shows this alert icon on every page mockup (verified across all Delegate
+     * Election, Governance, and Validators frames) — it isn't conditional on any known
+     * backend signal today, so default it on. Wire to a real "pending ranking" signal
+     * once the Delegate Election API exposes one.
+     */
+    { name: 'Delegate Election', path: '/delegate-election', hasAlert: true },
   ];
 
   const pageName = pathnameToPageName(location.pathname);
