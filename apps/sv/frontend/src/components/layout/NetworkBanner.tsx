@@ -36,7 +36,8 @@ const NetworkBanner: React.FC<NetworkBannerProps> = ({ networkName, dsoPartyId }
         fontFamily: layoutTokens.fontUi,
         fontSize: '1.25rem',
         fontWeight: 700,
-        lineHeight: 1.75,
+        /** Figma Dev Mode — 140% line-height (28px at 20px font size). */
+        lineHeight: 1.4,
         textAlign: 'center',
       }}
     >

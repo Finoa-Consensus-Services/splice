@@ -24,7 +24,7 @@ interface SvNavigationShellProps {
 
 /**
  * Figma "Navigation" component — banner + nav row.
- * Dev Mode: vertical flow, gap 30px, padding-bottom 36px, background #272727.
+ * Dev Mode: vertical flow, gap 30px, padding-bottom 64px, background #272727.
  */
 const SvNavigationShell: React.FC<SvNavigationShellProps> = ({
   networkName,

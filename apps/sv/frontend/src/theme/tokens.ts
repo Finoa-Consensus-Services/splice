@@ -33,8 +33,8 @@ export const NAV_PILL_PX = '10px';
 /** Figma content max width (nav row is full width; content uses this) */
 export const CONTENT_MAX_WIDTH = 1583;
 
-/** Figma pb-9 — 36px space below nav row */
-export const HEADER_PB = 4.5;
+/** Figma Dev Mode — 64px space below nav row, present on every page */
+export const HEADER_PB = 8;
 
 /** Figma Dev Mode — 30px gap between banner and nav row (Navigation component) */
 export const BANNER_HEADER_GAP = 3.75;
@@ -52,15 +52,16 @@ export const NAV_ROW_MIN_HEIGHT = 44;
 export const BANNER_MIN_HEIGHT = 50;
 
 /**
- * Figma Dev Mode — Inter nav/logout typography (letter spacing: 0px).
+ * Figma Dev Mode — Inter nav/logout typography (letter spacing: 0px, 140% line-height).
  * Without an explicit `letterSpacing` reset, these Box/Typography elements inherit
  * MUI's default body1 letter-spacing (0.00938em) from an ancestor, rendering as a
  * ~0.13-0.15px leak that's invisible in a screenshot but measurable via computed
- * styles and doesn't match Figma's 0px spec.
+ * styles and doesn't match Figma's 0px spec. `lineHeight: 'normal'` also falls back
+ * to Inter's own metrics rather than the explicit 140% Figma spec, so it's pinned here.
  */
 export const navItemTypography = {
   fontFeatureSettings: "'liga' off, 'clig' off",
-  lineHeight: 'normal',
+  lineHeight: 1.4,
   letterSpacing: 0,
 } as const;
 
