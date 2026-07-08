@@ -66,29 +66,3 @@ export const navItemTypography = {
 } as const;
 
 export const BRAND_TITLE = 'Supervalidator Operations';
-
-/** Figma form tokens (components.md — Input/Select, Button, ActionSelection card). */
-export const formTokens = {
-  surfaceCard: '#18181b',
-  surfaceInput: '#404040',
-  textSecondary: '#e5e5e5',
-  textPlaceholder: '#78716c',
-  textDisabled: '#404040',
-  textOnPrimary: '#18181b',
-  accentPrimary: '#a5f3fc',
-  accentSecondary: '#F3FF97',
-  stateDisabled: '#78716c',
-  fontUi: layoutTokens.fontUi,
-  fieldMaxWidth: 833,
-  radiusPill: '20px',
-  radiusCard: '4px',
-} as const;
-
-/** Figma py-14 — vertical padding on action-selection card */
-export const ACTION_SELECTION_CARD_PY = 7;
-
-/** Figma gap-8 — space between field group and button row */
-export const ACTION_SELECTION_FIELD_GAP = 4;
-
-/** Figma gap-3.5 — space between Cancel and Next */
-export const ACTION_SELECTION_BUTTON_GAP = '14px';

@@ -43,11 +43,13 @@ export const CreateProposal: React.FC = () => {
   const action = searchParams.get('action');
   const selectedAction = createProposalActions.find(a => a.value === action);
 
-  return selectedAction ? (
+  return (
     <Box sx={{ p: 4 }}>
-      <ProposalForm action={selectedAction.value as SupportedActionTag} />
+      {selectedAction ? (
+        <ProposalForm action={selectedAction.value as SupportedActionTag} />
+      ) : (
+        <SelectAction />
+      )}
     </Box>
-  ) : (
-    <SelectAction />
   );
 };
