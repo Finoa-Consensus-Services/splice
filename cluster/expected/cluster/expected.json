@@ -4,42 +4,7 @@
     "id": "",
     "inputs": {
       "autoscaling": {
-        "maxNodeCount": 1,
-        "minNodeCount": 0
-      },
-      "cluster": "cn-mocknet",
-      "initialNodeCount": 0,
-      "nodeConfig": {
-        "bootDisk": {
-          "diskType": "hyperdisk-balanced",
-          "sizeGb": 100
-        },
-        "labels": {
-          "cn_apps": "hyperdisk"
-        },
-        "loggingVariant": "DEFAULT",
-        "machineType": "n4d-standard-16",
-        "taints": [
-          {
-            "effect": "NO_SCHEDULE",
-            "key": "cn_apps",
-            "value": "true"
-          }
-        ]
-      },
-      "nodeLocations": [
-        "europe-west6-z"
-      ]
-    },
-    "name": "cn-apps-node-pool-hd",
-    "provider": "",
-    "type": "gcp:container/nodePool:NodePool"
-  },
-  {
-    "custom": true,
-    "id": "",
-    "inputs": {
-      "autoscaling": {
+        "locationPolicy": "ANY",
         "maxNodeCount": 1,
         "minNodeCount": 0
       },
@@ -62,12 +27,43 @@
             "value": "true"
           }
         ]
-      },
-      "nodeLocations": [
-        "europe-west6-z"
-      ]
+      }
     },
-    "name": "cn-apps-node-pool-n4-standard-16-hd",
+    "name": "cn-apps-node-pool-1-hd",
+    "provider": "",
+    "type": "gcp:container/nodePool:NodePool"
+  },
+  {
+    "custom": true,
+    "id": "",
+    "inputs": {
+      "autoscaling": {
+        "locationPolicy": "ANY",
+        "maxNodeCount": 1,
+        "minNodeCount": 0
+      },
+      "cluster": "cn-mocknet",
+      "initialNodeCount": 0,
+      "nodeConfig": {
+        "bootDisk": {
+          "diskType": "hyperdisk-balanced",
+          "sizeGb": 100
+        },
+        "labels": {
+          "cn_apps": "hyperdisk"
+        },
+        "loggingVariant": "DEFAULT",
+        "machineType": "n4d-standard-16",
+        "taints": [
+          {
+            "effect": "NO_SCHEDULE",
+            "key": "cn_apps",
+            "value": "true"
+          }
+        ]
+      }
+    },
+    "name": "cn-apps-node-pool-hd",
     "provider": "",
     "type": "gcp:container/nodePool:NodePool"
   },
