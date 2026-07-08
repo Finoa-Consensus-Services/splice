@@ -39,11 +39,11 @@ export const HEADER_PB = 8;
 /** Figma Dev Mode — 30px gap between banner and nav row (Navigation component) */
 export const BANNER_HEADER_GAP = 3.75;
 
-/** Figma Dev Mode — 145px between brand wordmark and nav cluster */
-export const ZONE_GAP = 'clamp(12px, 4vw, 145px)';
+/** Figma Dev Mode — fixed 145px gap between brand wordmark and nav cluster. */
+export const NAV_BRAND_GAP = '145px';
 
-/** Figma Dev Mode — 60px between nav pills */
-export const NAV_GAP = 'clamp(8px, 1.5vw, 60px)';
+/** Figma Dev Mode — fixed 60px between nav pills (not responsive). */
+export const NAV_GAP = '60px';
 
 /** Figma Dev Mode — nav row height 44px */
 export const NAV_ROW_MIN_HEIGHT = 44;
