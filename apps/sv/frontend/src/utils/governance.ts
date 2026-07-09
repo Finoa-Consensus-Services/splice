@@ -341,3 +341,8 @@ export function buildAmuletRulesPendingConfigFields(
       }));
     });
 }
+
+export function getProposalLink(contractId: string): string {
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  return `${origin}/governance/proposals/${contractId}`;
+}
