@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+         `Lato:wght@400;700` added alongside Inter/Source Code Pro: `tokens.md`
+         documents `font-section: Lato` (section headings, table headers/cells)
+         and it's already referenced via `fontFamily: 'Lato'` in
+         ProposalVoteForm.tsx and SelectAction.tsx, but was never actually
+         loaded here — every existing Lato usage was silently falling back to
+         the browser's default sans-serif font.
+    -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Code+Pro:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Lato:wght@400;700&family=Source+Code+Pro:wght@500;700&display=swap"
       rel="stylesheet"
     />
 

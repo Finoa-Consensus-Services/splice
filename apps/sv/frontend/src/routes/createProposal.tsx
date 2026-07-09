@@ -38,13 +38,25 @@ const ProposalForm: React.FC<{ action: SupportedActionTag }> = ({ action }) => {
   }
 };
 
+/**
+ * Figma's outer canvas is 1880px (matches `Layout.tsx`'s `Container
+ * maxWidth="xl"`), but the actual page content column below the nav is a
+ * narrower 1583px, centered within it (confirmed via Dev Mode: card padding
+ * `60px 374px` around an 835px-wide field/button group = 374+835+374 = 1583).
+ * `Layout.tsx` only constrains to the 1880px outer frame, so without this,
+ * `SelectAction`'s full-width card background bleeds out to ~1768px instead
+ * of Figma's 1583px column. Scoped to this route rather than `Layout.tsx`
+ * since other pages haven't been reviewed against this constraint yet.
+ */
+const CREATE_PROPOSAL_MAX_WIDTH = 1583;
+
 export const CreateProposal: React.FC = () => {
   const [searchParams, _] = useSearchParams();
   const action = searchParams.get('action');
   const selectedAction = createProposalActions.find(a => a.value === action);
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ maxWidth: CREATE_PROPOSAL_MAX_WIDTH, mx: 'auto', p: 4 }}>
       {selectedAction ? (
         <ProposalForm action={selectedAction.value as SupportedActionTag} />
       ) : (
