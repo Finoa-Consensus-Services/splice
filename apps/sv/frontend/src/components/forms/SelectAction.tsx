@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router';
 import { Dropdown } from '../ui/Dropdown';
 import { createProposalActions } from '../../utils/governance';
 
-
 const CARD_CONTENT_WIDTH = 833;
 const CARD_BG = '#1b1b1b';
 const CARD_VERTICAL_PADDING = '60px';
@@ -101,7 +100,9 @@ export const SelectAction: React.FC = () => {
             )}
           />
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '14px' }}>
+          <Box
+            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '14px' }}
+          >
             <form.Subscribe
               selector={state => state.canSubmit}
               children={canSubmit => (

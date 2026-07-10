@@ -38,7 +38,6 @@ const ProposalForm: React.FC<{ action: SupportedActionTag }> = ({ action }) => {
   }
 };
 
-
 const CREATE_PROPOSAL_MAX_WIDTH = 1583;
 
 export const CreateProposal: React.FC = () => {

@@ -145,12 +145,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   return (
     <FormControl fullWidth={fullWidth} error={isError} sx={sx}>
       {showLabel && (
-        <Typography
-          component="label"
-          id={resolvedLabelId}
-          htmlFor={resolvedId}
-          sx={labelSx}
-        >
+        <Typography component="label" id={resolvedLabelId} htmlFor={resolvedId} sx={labelSx}>
           {label}
           {required && (
             <Box component="span" sx={{ color: '#E2E2E2', ml: '2px' }} aria-hidden="true">
@@ -171,7 +166,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
         onBlur={onBlur}
         IconComponent={ChevronDownIcon}
         renderValue={selected =>
-          renderValue ? renderValue(selected as string, options) : defaultRenderValue(selected as string)
+          renderValue
+            ? renderValue(selected as string, options)
+            : defaultRenderValue(selected as string)
         }
         sx={theme => ({
           bgcolor: FIELD_BG,
