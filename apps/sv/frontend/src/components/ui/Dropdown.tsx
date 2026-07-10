@@ -98,8 +98,11 @@ const ChevronDownIcon: React.FC<React.SVGProps<SVGSVGElement>> = props => (
   </svg>
 );
 
-const resolveLabelId = (labelId: string | undefined, id: string | undefined): string | undefined =>
-  labelId ?? (label ? `${id ?? 'dropdown'}-label` : undefined);
+const resolveLabelId = (
+  labelId: string | undefined,
+  id: string | undefined,
+  label: string | undefined
+): string | undefined => labelId ?? (label ? `${id ?? 'dropdown'}-label` : undefined);
 
 export const Dropdown: React.FC<DropdownProps> = ({
   options,
@@ -123,7 +126,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const isDisabled = disabledProp ?? state === 'disabled';
   const isError = errorProp ?? state === 'error';
   const resolvedId = id ?? testId ?? 'dropdown';
-  const resolvedLabelId = resolveLabelId(labelIdProp, resolvedId);
+  const resolvedLabelId = resolveLabelId(labelIdProp, resolvedId, label);
   const showLabel = Boolean(label);
 
   const defaultRenderValue = (selected: string) => {
