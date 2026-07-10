@@ -11,7 +11,11 @@ import { Box } from '@mui/material';
  * two filled bars that don't resemble a logout glyph at all.
  */
 const LogoutIcon: React.FC = () => (
-  <Box component="span" aria-hidden sx={{ display: 'inline-flex', width: 16, height: 16, flexShrink: 0 }}>
+  <Box
+    component="span"
+    aria-hidden
+    sx={{ display: 'inline-flex', width: 16, height: 16, flexShrink: 0 }}
+  >
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M6.76 2.25H2.6V13.74H6.76" stroke="white" strokeWidth="2" strokeLinejoin="round" />
       <path d="M5.93 7.99H12.59" stroke="white" strokeWidth="2" strokeLinecap="round" />

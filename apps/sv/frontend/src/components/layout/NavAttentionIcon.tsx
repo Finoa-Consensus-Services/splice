@@ -11,7 +11,13 @@ const NavAttentionIcon: React.FC = () => (
     aria-hidden
     sx={{ display: 'inline-flex', width: 16, height: 16, flexShrink: 0 }}
   >
-    <svg width="16" height="16" viewBox="1724.31 414.44 12.86 11.56" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="16"
+      height="16"
+      viewBox="1724.31 414.44 12.86 11.56"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         fillRule="evenodd"
         clipRule="evenodd"

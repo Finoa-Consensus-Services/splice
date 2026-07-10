@@ -4,12 +4,7 @@ import * as React from 'react';
 
 import { Box } from '@mui/material';
 
-import {
-  BANNER_HEADER_GAP,
-  HEADER_PB,
-  layoutTokens,
-  PAGE_PX,
-} from '../../theme/tokens';
+import { BANNER_HEADER_GAP, HEADER_PB, layoutTokens, PAGE_PX } from '../../theme/tokens';
 import NetworkBanner from './NetworkBanner';
 import SvTopNav from './SvTopNav';
 import { SvNavLinkItem } from './SvNavLink';

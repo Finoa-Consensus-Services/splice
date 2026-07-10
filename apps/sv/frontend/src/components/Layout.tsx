@@ -1,11 +1,7 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import * as React from 'react';
-import {
-  Loading,
-  useUserState,
-  useVotesHooks,
-} from '@canton-network/splice-common-frontend';
+import { Loading, useUserState, useVotesHooks } from '@canton-network/splice-common-frontend';
 
 import { Box, Container } from '@mui/material';
 import { useLocation } from 'react-router';
@@ -85,16 +81,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   const pageName = pathnameToPageName(location.pathname);
-  const networkName =
-    networkInstanceName ?? config.spliceInstanceNames.networkName;
+  const networkName = networkInstanceName ?? config.spliceInstanceNames.networkName;
 
   return (
-    <Box
-      bgcolor={layoutTokens.page}
-      display="flex"
-      flexDirection="column"
-      minHeight="100vh"
-    >
+    <Box bgcolor={layoutTokens.page} display="flex" flexDirection="column" minHeight="100vh">
       {dsoPartyId !== undefined ? (
         <SvNavigationShell
           networkName={networkName}
