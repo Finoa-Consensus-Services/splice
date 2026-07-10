@@ -1,0 +1,32 @@
+/* Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/**
+ * SV-local Termina font-faces.
+ *
+ * @canton-network/splice-common-typeface-termina only bundles Termina Bold at
+ * `font-weight: 700` (with an invalid `font-style: bold`, silently ignored by
+ * browsers). The SV brand wordmark needs `font-weight: 500` (Figma Dev Mode),
+ * and until now no true Medium-weight Termina artwork existed anywhere in this
+ * design system, so 500 rendered as bold via a weight-range hack.
+ *
+ * These are the real Termina Medium/Bold weights (licensed test files from
+ * Fort Foundry, see assets/fonts/termina/ — the full 9-weight family is kept
+ * there for future use, but only the two weights this app actually renders
+ * are registered below), scoped to apps/sv (no apps/common changes). This is
+ * the first time an actual Medium glyph set has been wired up — 500 now
+ * renders visibly lighter than 700.
+ */
+@font-face {
+  font-family: 'Termina';
+  src: url('../assets/fonts/termina/TerminaTest-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Termina';
+  src: url('../assets/fonts/termina/TerminaTest-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
