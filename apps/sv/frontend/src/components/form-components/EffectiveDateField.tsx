@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { KeyboardArrowDown } from '@mui/icons-material';
 import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { useFieldContext } from '../../hooks/formContext';
 import { DesktopDateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -8,7 +9,13 @@ import { dateTimeFormatISO } from '@canton-network/splice-common-frontend-utils'
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { EffectivityType } from '../../utils/types';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import { fieldDescriptionSx } from '../../themes/fieldStyles';
+
+const effectiveAtDisplayFormat = 'YYYY-MM-DD HH:mm';
+
+const isPickerTriggerButton = (target: EventTarget | null) =>
+  target instanceof Element && Boolean(target.closest('button'));
 
 export interface EffectiveDateFieldProps {
   title?: string;
@@ -35,6 +42,8 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
     () => dayjs(field.state.value.effectiveDate),
     [field.state.value.effectiveDate]
   );
+
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const handleTypeChange = (type: EffectivityType) => {
     if (type === 'custom') {
@@ -72,15 +81,22 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
 
         {currentType === 'custom' && (
           <>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography sx={fieldDescriptionSx} gutterBottom>
               {description}
             </Typography>
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDateTimePicker
                 value={dateValue}
-                format={dateTimeFormatISO}
+                format={effectiveAtDisplayFormat}
                 ampm={false}
+                open={pickerOpen}
+                sx={{ width: '100%', display: 'block' }}
+                onOpen={() => setPickerOpen(true)}
+                onClose={() => {
+                  setPickerOpen(false);
+                  field.handleBlur();
+                }}
                 onChange={newDate => {
                   field.handleChange({
                     type: 'custom',
@@ -88,18 +104,78 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
                   });
                 }}
                 enableAccessibleFieldDOMStructure={false}
+                slots={{
+                  openPickerIcon: KeyboardArrowDown,
+                }}
                 slotProps={{
+                  openPickerButton: {
+                    sx: {
+                      color: 'text.light',
+                      marginRight: 0,
+                      p: 0,
+                      cursor: 'pointer',
+                      '& .MuiSvgIcon-root': {
+                        fontSize: 16,
+                      },
+                    },
+                  },
                   textField: {
                     fullWidth: true,
                     variant: 'outlined',
                     id: `${id}-field`,
                     className: 'effective-date-field',
-                    onBlur: field.handleBlur,
                     error: !field.state.meta.isValid,
                     helperText: field.state.meta.errors?.[0],
+                    onClick: (event: React.MouseEvent<HTMLDivElement>) => {
+                      if (isPickerTriggerButton(event.target)) {
+                        return;
+                      }
+                      setPickerOpen(true);
+                    },
                     inputProps: {
                       'data-testid': `${id}-field`,
+                      readOnly: true,
                     },
+                    sx: theme => ({
+                      width: '100%',
+                      cursor: 'pointer',
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: '#363636',
+                        borderRadius: '4px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        alignSelf: 'stretch',
+                        flexWrap: 'nowrap',
+                        padding: '13px 16px',
+                        overflow: 'hidden',
+                        minHeight: 'unset',
+                        cursor: 'pointer',
+                        '& fieldset': {
+                          border: 'none',
+                          borderRadius: '4px',
+                        },
+                      },
+                      '& .MuiOutlinedInput-input': {
+                        ...theme.typography.body2,
+                        flex: 1,
+                        minWidth: 0,
+                        padding: 0,
+                        lineHeight: '22px',
+                        color: theme.palette.text.light,
+                        backgroundColor: 'transparent',
+                        borderRadius: 0,
+                        cursor: 'pointer',
+                        WebkitBoxShadow: 'none',
+                      },
+                      '& .MuiInputAdornment-root': {
+                        flexShrink: 0,
+                        marginLeft: theme.spacing(1.25),
+                      },
+                      '& .MuiFormHelperText-root': {
+                        mx: 0,
+                      },
+                    }),
                   },
                 }}
               />
@@ -113,7 +189,7 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
           label={
             <Box>
               <Typography>Make effective at threshold</Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography sx={fieldDescriptionSx}>
                 Allow the vote proposal to take effect immediately when 2/3 vote in favor
               </Typography>
             </Box>
