@@ -1,6 +1,7 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { KeyboardArrowDown } from '@mui/icons-material';
 import {
   Box,
   FormControl,
@@ -13,6 +14,7 @@ import {
 import type { FormEvent } from 'react';
 import { useFieldContext } from '../../hooks/formContext';
 import { scrollableSelectFieldSx } from '../beta/identifierStyles';
+import { fieldSectionSx, fieldSectionTitleSx, selectFieldSx } from '../../themes/fieldStyles';
 
 export type Option = { key: string; value: string };
 export interface SelectFieldProps {
@@ -38,13 +40,17 @@ export const SelectField: React.FC<SelectFieldProps> = props => {
   const isError = !field.state.meta.isValid && !showPlaceholder;
 
   return (
-    <Box data-testid={`${id}-select-component`}>
-      <Typography variant="h6" gutterBottom>
-        {title}
-      </Typography>
+    <Box sx={fieldSectionSx} data-testid={`${id}-select-component`}>
+      <Typography sx={fieldSectionTitleSx}>{title}</Typography>
 
-      <FormControl variant="outlined" error={isError} fullWidth>
+      <FormControl
+        variant="outlined"
+        error={isError}
+        fullWidth
+        sx={{ '& .MuiFormHelperText-root': { mx: 0, mt: 1 } }}
+      >
         <Select
+          IconComponent={KeyboardArrowDown}
           value={field.state.value}
           displayEmpty
           sx={scrollableIdentifier ? scrollableSelectFieldSx : undefined}
@@ -68,6 +74,7 @@ export const SelectField: React.FC<SelectFieldProps> = props => {
           disabled={disabled}
           id={`${id}-dropdown`}
           data-testid={id}
+          sx={selectFieldSx}
           inputProps={{
             'data-testid': `${id}-dropdown`,
             onChange: (e: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
