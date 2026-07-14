@@ -5,8 +5,6 @@ import { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, Collapse, Typography } from '@mui/material';
 
-const JSON_TOGGLE_ACCENT = '#F3FF97';
-
 const JSON_DIFF_FRAME_BACKGROUND = '#363636';
 
 const JSON_DIFF_VIEWPORT_MAX_HEIGHT = '320px';
@@ -42,7 +40,8 @@ const toggleSx = {
   justifyContent: 'center',
   gap: '4px',
   borderRadius: '2px',
-  border: `1px solid ${JSON_TOGGLE_ACCENT}`,
+  border: '1px solid',
+  borderColor: 'secondary.main',
   bgcolor: 'transparent',
   cursor: 'pointer',
   margin: 0,
@@ -126,7 +125,7 @@ const jsonDiffViewportSx = {
 
   '& [data-testid="stringify-display"]': {
     ...jsonDiffMonoSx,
-    color: '#FFF',
+    color: 'common.white',
     whiteSpace: 'pre-wrap',
     wordBreak: 'break-word',
     overflowWrap: 'break-word',
@@ -134,7 +133,7 @@ const jsonDiffViewportSx = {
 
   [`${DIFF} .jsondiffpatch-delta`]: {
     ...jsonDiffMonoSx,
-    color: '#FFF',
+    color: 'common.white',
     display: 'block',
     maxWidth: '100%',
     boxSizing: 'border-box',
@@ -175,7 +174,7 @@ const jsonDiffViewportSx = {
   [`${DIFF} li.jsondiffpatch-added:not(:last-child) > .jsondiffpatch-value::after, ${DIFF} li.jsondiffpatch-deleted:not(:last-child) > .jsondiffpatch-value::after, ${DIFF} li.jsondiffpatch-modified:not(:last-child) > .jsondiffpatch-right-value::after`]:
     {
       content: '","',
-      color: '#FFF',
+      color: 'common.white',
       padding: 0,
     },
 
@@ -208,7 +207,7 @@ const JsonToggleButton: React.FC<JsonToggleButtonProps> = ({ expanded, onClick }
     </Typography>
     <ExpandMoreIcon
       sx={{
-        color: JSON_TOGGLE_ACCENT,
+        color: 'secondary.main',
         fontSize: 16,
         width: 16,
         height: 16,
