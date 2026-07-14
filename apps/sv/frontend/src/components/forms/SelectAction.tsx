@@ -13,6 +13,11 @@ import {
 } from '@mui/material';
 import { useForm } from '@tanstack/react-form';
 import { useNavigate } from 'react-router';
+import {
+  CREATE_PROPOSAL_CARD_SX,
+  CREATE_PROPOSAL_FIELD_COLUMN_SX,
+  CREATE_PROPOSAL_FIELD_LABEL_SX,
+} from '../../constants/createProposalLayout';
 import { createProposalActions } from '../../utils/governance';
 
 export const SelectAction: React.FC = () => {
@@ -34,17 +39,9 @@ export const SelectAction: React.FC = () => {
 
   return (
     <Box>
-      <Paper
-        sx={{
-          bgcolor: 'background.paper',
-          p: 4,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Box sx={{ minWidth: '60%' }}>
-          <Typography sx={{ mb: 2 }} variant="h3">
+      <Paper elevation={0} sx={CREATE_PROPOSAL_CARD_SX}>
+        <Box sx={CREATE_PROPOSAL_FIELD_COLUMN_SX}>
+          <Typography sx={{ ...CREATE_PROPOSAL_FIELD_LABEL_SX, mb: 2 }}>
             Select an Action
           </Typography>
 

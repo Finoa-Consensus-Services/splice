@@ -10,6 +10,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from '@mui/material';
+import { CREATE_PROPOSAL_FIELD_LABEL_SX } from '../../constants/createProposalLayout';
 import type { FormEvent } from 'react';
 import { useFieldContext } from '../../hooks/formContext';
 
@@ -37,7 +38,7 @@ export const SelectField: React.FC<SelectFieldProps> = props => {
 
   return (
     <Box data-testid={`${id}-select-component`}>
-      <Typography variant="h6" gutterBottom>
+      <Typography component="p" sx={{ ...CREATE_PROPOSAL_FIELD_LABEL_SX, mb: 1 }}>
         {title}
       </Typography>
 

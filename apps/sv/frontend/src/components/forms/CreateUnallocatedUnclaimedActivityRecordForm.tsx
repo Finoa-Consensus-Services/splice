@@ -8,7 +8,17 @@ import { useState } from 'react';
 import { useDsoInfos } from '../../contexts/SvContext';
 import { useAppForm } from '../../hooks/form';
 import { useProposalMutation } from '../../hooks/useProposalMutation';
-import { THRESHOLD_DEADLINE_SUBTITLE } from '../../utils/constants';
+import {
+  CREATE_PROPOSAL_LABEL_AMOUNT,
+  CREATE_PROPOSAL_LABEL_BENEFICIARY,
+  CREATE_PROPOSAL_LABEL_EFFECTIVE_AT,
+  CREATE_PROPOSAL_LABEL_MUST_MINT_BEFORE,
+  CREATE_PROPOSAL_LABEL_PROPOSAL_SUMMARY,
+  CREATE_PROPOSAL_LABEL_PROPOSAL_TYPE,
+  CREATE_PROPOSAL_LABEL_SUPPORTING_URL,
+  CREATE_PROPOSAL_LABEL_THRESHOLD_DEADLINE,
+  THRESHOLD_DEADLINE_SUBTITLE,
+} from '../../utils/constants';
 import { createProposalActions, getInitialExpiration } from '../../utils/governance';
 import type { CommonProposalFormData } from '../../utils/types';
 import { EffectiveDateField } from '../form-components/EffectiveDateField';
@@ -107,7 +117,12 @@ export const CreateUnallocatedUnclaimedActivityRecordForm: React.FC = _ => {
 
   return (
     <>
-      <FormLayout form={form} id="create-unallocated-unclaimed-activity-record-form">
+      <FormLayout
+        form={form}
+        id="create-unallocated-unclaimed-activity-record-form"
+        actionName={form.state.values.action}
+        isReviewStep={showConfirmation}
+      >
         {showConfirmation ? (
           <ProposalSummary
             actionName={form.state.values.action}
@@ -126,51 +141,9 @@ export const CreateUnallocatedUnclaimedActivityRecordForm: React.FC = _ => {
           <>
             <form.AppField name="action">
               {field => (
-                <field.ProposalTypeField id="create-unallocated-unclaimed-activity-record-action" />
-              )}
-            </form.AppField>
-
-            <form.AppField
-              name="beneficiary"
-              validators={{
-                onBlur: ({ value }) => validateMintedBeneficiary(value),
-                onChange: ({ value }) => validateMintedBeneficiary(value),
-              }}
-            >
-              {field => (
-                <field.TextField
-                  title="Beneficiary"
-                  id="create-unallocated-unclaimed-activity-record-beneficiary"
-                />
-              )}
-            </form.AppField>
-
-            <form.AppField
-              name="amount"
-              validators={{
-                onBlur: ({ value }) => validateRewardAmount(value),
-                onChange: ({ value }) => validateRewardAmount(value),
-              }}
-            >
-              {field => (
-                <field.TextField
-                  title="Amount"
-                  id="create-unallocated-unclaimed-activity-record-amount"
-                />
-              )}
-            </form.AppField>
-
-            <form.AppField
-              name="mintBefore"
-              validators={{
-                onChange: ({ value }) => validateMintBefore(value),
-                onBlur: ({ value }) => validateMintBefore(value),
-              }}
-            >
-              {field => (
-                <field.DateField
-                  title="Must Mint Before"
-                  id="create-unallocated-unclaimed-activity-record-mint-before"
+                <field.ProposalTypeField
+                  id="create-unallocated-unclaimed-activity-record-action"
+                  title={CREATE_PROPOSAL_LABEL_PROPOSAL_TYPE}
                 />
               )}
             </form.AppField>
@@ -184,7 +157,7 @@ export const CreateUnallocatedUnclaimedActivityRecordForm: React.FC = _ => {
             >
               {field => (
                 <field.DateField
-                  title="Threshold Deadline"
+                  title={CREATE_PROPOSAL_LABEL_THRESHOLD_DEADLINE}
                   description={THRESHOLD_DEADLINE_SUBTITLE}
                   id="create-unallocated-unclaimed-activity-record-expiry-date"
                 />
@@ -199,6 +172,7 @@ export const CreateUnallocatedUnclaimedActivityRecordForm: React.FC = _ => {
               }}
               children={_ => (
                 <EffectiveDateField
+                  title={CREATE_PROPOSAL_LABEL_EFFECTIVE_AT}
                   initialEffectiveDate={initialEffectiveDate.format(dateTimeFormatISO)}
                   id="create-unallocated-unclaimed-activity-record-effective-date"
                 />
@@ -213,7 +187,10 @@ export const CreateUnallocatedUnclaimedActivityRecordForm: React.FC = _ => {
               }}
             >
               {field => (
-                <field.ProposalSummaryField id="create-unallocated-unclaimed-activity-record-summary" />
+                <field.ProposalSummaryField
+                  id="create-unallocated-unclaimed-activity-record-summary"
+                  title={CREATE_PROPOSAL_LABEL_PROPOSAL_SUMMARY}
+                />
               )}
             </form.AppField>
 
@@ -226,8 +203,53 @@ export const CreateUnallocatedUnclaimedActivityRecordForm: React.FC = _ => {
             >
               {field => (
                 <field.TextField
-                  title="URL"
+                  title={CREATE_PROPOSAL_LABEL_SUPPORTING_URL}
                   id="create-unallocated-unclaimed-activity-record-url"
+                />
+              )}
+            </form.AppField>
+
+            <form.AppField
+              name="beneficiary"
+              validators={{
+                onBlur: ({ value }) => validateMintedBeneficiary(value),
+                onChange: ({ value }) => validateMintedBeneficiary(value),
+              }}
+            >
+              {field => (
+                <field.TextField
+                  title={CREATE_PROPOSAL_LABEL_BENEFICIARY}
+                  id="create-unallocated-unclaimed-activity-record-beneficiary"
+                />
+              )}
+            </form.AppField>
+
+            <form.AppField
+              name="amount"
+              validators={{
+                onBlur: ({ value }) => validateRewardAmount(value),
+                onChange: ({ value }) => validateRewardAmount(value),
+              }}
+            >
+              {field => (
+                <field.TextField
+                  title={CREATE_PROPOSAL_LABEL_AMOUNT}
+                  id="create-unallocated-unclaimed-activity-record-amount"
+                />
+              )}
+            </form.AppField>
+
+            <form.AppField
+              name="mintBefore"
+              validators={{
+                onChange: ({ value }) => validateMintBefore(value),
+                onBlur: ({ value }) => validateMintBefore(value),
+              }}
+            >
+              {field => (
+                <field.DateField
+                  title={CREATE_PROPOSAL_LABEL_MUST_MINT_BEFORE}
+                  id="create-unallocated-unclaimed-activity-record-mint-before"
                 />
               )}
             </form.AppField>

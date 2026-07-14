@@ -2,6 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import {
+  CREATE_PROPOSAL_FIELD_BODY_SX,
+  CREATE_PROPOSAL_FIELD_HELPER_SX,
+  CREATE_PROPOSAL_FIELD_LABEL_SX,
+} from '../../constants/createProposalLayout';
 import { useFieldContext } from '../../hooks/formContext';
 import { DesktopDateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { dateTimeFormatISO } from '@canton-network/splice-common-frontend-utils';
@@ -56,7 +61,7 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="h5" gutterBottom>
+      <Typography component="p" sx={{ ...CREATE_PROPOSAL_FIELD_LABEL_SX, mb: 1 }}>
         {title}
       </Typography>
 
@@ -67,12 +72,12 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
         <FormControlLabel
           value="custom"
           control={<Radio />}
-          label={<Typography>Date</Typography>}
+          label={<Typography sx={CREATE_PROPOSAL_FIELD_BODY_SX}>Date</Typography>}
         />
 
         {currentType === 'custom' && (
           <>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography component="p" sx={{ ...CREATE_PROPOSAL_FIELD_HELPER_SX, mb: 1 }}>
               {description}
             </Typography>
 
@@ -112,8 +117,10 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
           control={<Radio id="effective-at-threshold-radio" />}
           label={
             <Box>
-              <Typography>Make effective at threshold</Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography sx={CREATE_PROPOSAL_FIELD_BODY_SX}>
+                Make effective at threshold
+              </Typography>
+              <Typography component="p" sx={CREATE_PROPOSAL_FIELD_HELPER_SX}>
                 Allow the vote proposal to take effect immediately when 2/3 vote in favor
               </Typography>
             </Box>

@@ -2,6 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, TextField as MuiTextField, Typography } from '@mui/material';
+import {
+  CREATE_PROPOSAL_FIELD_HELPER_SX,
+  CREATE_PROPOSAL_FIELD_LABEL_SX,
+} from '../../constants/createProposalLayout';
 import { useFieldContext } from '../../hooks/formContext';
 import { useDsoInfos } from '../../contexts/SvContext';
 import {
@@ -28,10 +32,10 @@ export const ProposalSummaryField: React.FC<ProposalSummaryFieldProps> = props =
 
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
+      <Typography component="p" sx={{ ...CREATE_PROPOSAL_FIELD_LABEL_SX, mb: 1 }}>
         {title || PROPOSAL_SUMMARY_TITLE}
         {optional && (
-          <Typography component="span" variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+          <Typography component="span" sx={{ ...CREATE_PROPOSAL_FIELD_HELPER_SX, ml: 1 }}>
             optional
           </Typography>
         )}
@@ -59,14 +63,17 @@ export const ProposalSummaryField: React.FC<ProposalSummaryFieldProps> = props =
           gap: 2,
         }}
       >
-        <Typography variant="body2" data-testid={`${id}-subtitle`}>
+        <Typography
+          component="p"
+          data-testid={`${id}-subtitle`}
+          sx={CREATE_PROPOSAL_FIELD_HELPER_SX}
+        >
           {subtitle || PROPOSAL_SUMMARY_SUBTITLE}
         </Typography>
         <Typography
-          variant="body2"
-          color={'text.secondary'}
+          component="p"
           data-testid={`${id}-character-counter`}
-          sx={{ flexShrink: 0 }}
+          sx={{ ...CREATE_PROPOSAL_FIELD_HELPER_SX, flexShrink: 0 }}
         >
           {currentLength}/{maxLength}
         </Typography>

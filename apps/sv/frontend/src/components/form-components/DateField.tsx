@@ -6,6 +6,10 @@ import { Box, Typography } from '@mui/material';
 import { DesktopDateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { dateTimeFormatISO } from '@canton-network/splice-common-frontend-utils';
+import {
+  CREATE_PROPOSAL_FIELD_HELPER_SX,
+  CREATE_PROPOSAL_FIELD_LABEL_SX,
+} from '../../constants/createProposalLayout';
 import { useFieldContext } from '../../hooks/formContext';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -25,13 +29,13 @@ export const DateField: React.FC<DateFieldProps> = props => {
   return (
     <Box>
       {title && (
-        <Typography variant="h5" gutterBottom>
+        <Typography component="p" sx={{ ...CREATE_PROPOSAL_FIELD_LABEL_SX, mb: 1 }}>
           {title}
         </Typography>
       )}
 
       {description && (
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography component="p" sx={{ ...CREATE_PROPOSAL_FIELD_HELPER_SX, mb: 1 }}>
           {description}
         </Typography>
       )}

@@ -2,12 +2,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Paper } from '@mui/material';
+import {
+  CREATE_PROPOSAL_CARD_SX,
+  CREATE_PROPOSAL_FIELD_COLUMN_SX,
+  CREATE_PROPOSAL_SECTION_GAP,
+} from '../../constants/createProposalLayout';
 
 export interface FormLayoutProps {
   children: React.ReactNode;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any;
   id: string;
+  actionName: string;
+  isReviewStep?: boolean;
 }
 
 export const FormLayout: React.FC<FormLayoutProps> = props => {
@@ -15,16 +22,8 @@ export const FormLayout: React.FC<FormLayoutProps> = props => {
 
   return (
     <Box data-testid={id} id={id}>
-      <Paper
-        sx={{
-          bgcolor: 'background.paper',
-          p: 4,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Box sx={{ minWidth: '80%' }}>
+      <Paper elevation={0} sx={CREATE_PROPOSAL_CARD_SX}>
+        <Box sx={CREATE_PROPOSAL_FIELD_COLUMN_SX}>
           <form
             onSubmit={e => {
               e.preventDefault();
@@ -32,7 +31,11 @@ export const FormLayout: React.FC<FormLayoutProps> = props => {
               form.handleSubmit();
             }}
           >
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 8 }}>{children}</Box>
+            <Box
+              sx={{ display: 'flex', flexDirection: 'column', gap: CREATE_PROPOSAL_SECTION_GAP }}
+            >
+              {children}
+            </Box>
           </form>
         </Box>
       </Paper>

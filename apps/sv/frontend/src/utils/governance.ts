@@ -269,6 +269,32 @@ export function formatBasisPoints(value: string): string {
   return `${integerPart}_${decimalPart}`;
 }
 
+/** Parse a formatted basis-points display value (e.g. `1_2345`) to its numeric weight. */
+export function parseBasisPointsFormatted(value: string): number | null {
+  if (!value.includes('_')) {
+    return null;
+  }
+  const [integerPart, decimalPart] = value.split('_');
+  if (!/^\d+$/.test(integerPart) || !/^\d{4}$/.test(decimalPart)) {
+    return null;
+  }
+  return parseInt(`${integerPart}${decimalPart}`, 10);
+}
+
+/** Signed difference between two formatted weight values; null when either is invalid. */
+export function getWeightDiff(current: string, next: string): number | null {
+  const currentValue = parseBasisPointsFormatted(current);
+  const nextValue = parseBasisPointsFormatted(next);
+  if (currentValue === null || nextValue === null) {
+    return null;
+  }
+  return nextValue - currentValue;
+}
+
+export function formatBasisPointsPlain(value: string): string {
+  return value.replace('_', '');
+}
+
 export function getSvRewardWeight(svs: [string, SvInfo][], svPartyId: string): string {
   const svInfo = svs.find(sv => sv[0] === svPartyId);
   return svInfo ? svInfo[1].svRewardWeight : '';
