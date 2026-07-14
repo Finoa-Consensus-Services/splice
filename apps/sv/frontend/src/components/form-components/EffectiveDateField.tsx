@@ -11,7 +11,7 @@ import { EffectivityType } from '../../utils/types';
 import React, { useMemo, useState } from 'react';
 import { RadioSelector } from './RadioSelector';
 
-const effectiveAtDisplayFormat = 'YY-MM-DD HH:mm';
+const effectiveAtDisplayFormat = 'YYYY-MM-DD HH:mm';
 
 const isPickerTriggerButton = (target: EventTarget | null) =>
   target instanceof Element && Boolean(target.closest('button'));
@@ -100,6 +100,7 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
                     openPickerButton: {
                       sx: {
                         color: 'text.light',
+                        marginRight: 0,
                         p: 0,
                         cursor: 'pointer',
                         '& .MuiSvgIcon-root': {
@@ -134,6 +135,7 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
                           justifyContent: 'space-between',
                           alignItems: 'center',
                           alignSelf: 'stretch',
+                          flexWrap: 'nowrap',
                           padding: '13px 16px',
                           overflow: 'hidden',
                           minHeight: 'unset',

@@ -5,6 +5,7 @@ import { Box, FormControlLabel, Radio, RadioGroup, SvgIcon, Typography } from '@
 import type { SvgIconProps } from '@mui/material';
 import React from 'react';
 import type { Theme } from '@mui/material/styles';
+import { theme } from '@canton-network/splice-common-frontend';
 
 export interface RadioSelectorOption {
   value: string;
@@ -68,8 +69,8 @@ const RADIO_DOT_PATH =
 
 const RadioIcon: React.FC<SvgIconProps & { checked?: boolean }> = ({ checked, ...props }) => (
   <SvgIcon {...props} viewBox="0 0 16 16">
-    <path d={RADIO_RING_PATH} fill="#F3FF97" />
-    {checked && <path d={RADIO_DOT_PATH} fill="#F3FF97" />}
+    <path d={RADIO_RING_PATH} fill={theme.palette.secondary.main} />
+    {checked && <path d={RADIO_DOT_PATH} fill={theme.palette.secondary.main} />}
   </SvgIcon>
 );
 
