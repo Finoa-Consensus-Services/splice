@@ -13,6 +13,7 @@ import {
 import { dateTimeFormatISO } from '@canton-network/splice-common-frontend-utils';
 import { Alert, Box, Typography } from '@mui/material';
 import dayjs from 'dayjs';
+import type { DeepKeys } from '@tanstack/react-form';
 import { useMemo, useState } from 'react';
 import { useDsoInfos } from '../../contexts/SvContext';
 import { useListDsoRulesVoteRequests } from '../../hooks';
@@ -27,19 +28,20 @@ import {
   createProposalActions,
   getInitialExpiration,
 } from '../../utils/governance';
+import { getCurrentMigrationIdFromDsoInfo } from '../../utils/migrationId';
 import type { CommonProposalFormData, ConfigFormData } from '../../utils/types';
 import { EffectiveDateField } from '../form-components/EffectiveDateField';
 import { ProposalSubmissionError } from '../form-components/ProposalSubmissionError';
 import { JsonDiffAccordion } from '../governance/JsonDiffAccordion';
 import { ProposalSummary } from '../governance/ProposalSummary';
 import { FormLayout } from './FormLayout';
+import type { ConfigFieldState } from '../form-components/ConfigField';
 import {
   validateEffectiveDate,
   validateExpiration,
-  validateExpiryEffectiveDate,
-  validateNextScheduledSynchronizerUpgrade,
-  validateNextScheduledLogicalSynchronizerUpgrade,
+  validateSetDsoConfigRulesFormFields,
   validateSummary,
+  getSynchronizerUpgradeFieldError,
   validateUrl,
 } from './formValidators';
 
@@ -50,9 +52,75 @@ export type SetDsoConfigCompleteFormData = {
 
 const createProposalAction = createProposalActions.find(a => a.value === 'SRARC_SetConfig');
 
+type SyncUpgradeFieldValidatorConfig = {
+  listenTo: DeepKeys<SetDsoConfigCompleteFormData>[];
+  validate: (
+    value: ConfigFieldState,
+    formData: SetDsoConfigCompleteFormData,
+    currentMigrationId: number | undefined
+  ) => string | false;
+};
+
+const SYNC_UPGRADE_FIELD_VALIDATOR_CONFIG: Record<string, SyncUpgradeFieldValidatorConfig> = {
+  nextScheduledSynchronizerUpgradeMigrationId: {
+    listenTo: ['config.nextScheduledSynchronizerUpgradeTime', 'common.effectiveDate'],
+    validate: (value, formData, currentMigrationId) =>
+      getSynchronizerUpgradeFieldError(
+        'migrationId',
+        formData.config.nextScheduledSynchronizerUpgradeTime?.value ?? '',
+        value?.value ?? '',
+        formData.common.effectiveDate.effectiveDate,
+        currentMigrationId
+      ),
+  },
+  nextScheduledSynchronizerUpgradeTime: {
+    listenTo: ['config.nextScheduledSynchronizerUpgradeMigrationId', 'common.effectiveDate'],
+    validate: (value, formData, currentMigrationId) =>
+      getSynchronizerUpgradeFieldError(
+        'upgradeTime',
+        value?.value ?? '',
+        formData.config.nextScheduledSynchronizerUpgradeMigrationId?.value ?? '',
+        formData.common.effectiveDate.effectiveDate,
+        currentMigrationId
+      ),
+  },
+};
+
+const makeSyncUpgradeFieldValidators = (
+  config: SyncUpgradeFieldValidatorConfig,
+  currentMigrationId: number | undefined
+) => {
+  const validate = ({
+    value,
+    fieldApi,
+  }: {
+    value: ConfigFieldState;
+    fieldApi: { form: { state: { values: SetDsoConfigCompleteFormData } } };
+  }) => config.validate(value, fieldApi.form.state.values, currentMigrationId);
+
+  return {
+    onChangeListenTo: config.listenTo,
+    onChange: validate,
+    onBlur: validate,
+    onSubmit: validate,
+  };
+};
+
+const getSynchronizerUpgradeFieldValidators = (
+  fieldName: string,
+  currentMigrationId: number | undefined
+) => {
+  const config = SYNC_UPGRADE_FIELD_VALIDATOR_CONFIG[fieldName];
+  return config ? makeSyncUpgradeFieldValidators(config, currentMigrationId) : undefined;
+};
+
 export const SetDsoConfigRulesForm: () => JSX.Element = () => {
   const dsoInfoQuery = useDsoInfos();
   const dsoProposalsQuery = useListDsoRulesVoteRequests();
+  const currentMigrationId = useMemo(
+    () => (dsoInfoQuery.data ? getCurrentMigrationIdFromDsoInfo(dsoInfoQuery.data) : undefined),
+    [dsoInfoQuery.data]
+  );
   const votesHooks = useVotesHooks();
   const pendingConfigFields = useMemo(
     () => buildPendingConfigFields(dsoProposalsQuery.data),
@@ -104,6 +172,20 @@ export const SetDsoConfigRulesForm: () => JSX.Element = () => {
     };
   }, [dsoInfoQuery.data, initialExpiration, initialEffectiveDate]);
 
+  const synchronizerUpgradeFieldValidators = useMemo(
+    () => ({
+      nextScheduledSynchronizerUpgradeMigrationId: getSynchronizerUpgradeFieldValidators(
+        'nextScheduledSynchronizerUpgradeMigrationId',
+        currentMigrationId
+      ),
+      nextScheduledSynchronizerUpgradeTime: getSynchronizerUpgradeFieldValidators(
+        'nextScheduledSynchronizerUpgradeTime',
+        currentMigrationId
+      ),
+    }),
+    [currentMigrationId]
+  );
+
   const form = useAppForm({
     defaultValues,
     onSubmit: async ({ value: formData }) => {
@@ -133,37 +215,12 @@ export const SetDsoConfigRulesForm: () => JSX.Element = () => {
     },
 
     validators: {
-      onChange: ({ value: formData }) => {
-        const expiryError = validateExpiryEffectiveDate({
-          expiration: formData.common.expiryDate,
-          effectiveDate: formData.common.effectiveDate.effectiveDate,
-        });
-
-        if (expiryError) return expiryError;
-
-        const syncUpgradeTime = formData.config.nextScheduledSynchronizerUpgradeTime.value;
-        const syncMigrationId = formData.config.nextScheduledSynchronizerUpgradeMigrationId.value;
-        const effectiveDate = formData.common.effectiveDate.effectiveDate;
-
-        const synchronizerUpgradeError = validateNextScheduledSynchronizerUpgrade(
-          syncUpgradeTime,
-          syncMigrationId,
-          effectiveDate
-        );
-        if (synchronizerUpgradeError) return synchronizerUpgradeError;
-        const logicalSynchronizerUpgradeError = validateNextScheduledLogicalSynchronizerUpgrade(
-          formData.config.nextScheduledLogicalSynchronizerUpgradeTopologyFreezeTime.value,
-          formData.config.nextScheduledLogicalSynchronizerUpgradeUpgradeTime.value,
-          formData.config.nextScheduledLogicalSynchronizerUpgradeNewPhysicalSynchronizerSerial
-            .value,
-          formData.config
-            .nextScheduledLogicalSynchronizerUpgradeNewPhysicalSynchronizerProtocolVersion.value,
-          effectiveDate
-        );
-        if (logicalSynchronizerUpgradeError) return logicalSynchronizerUpgradeError;
-        return false;
-      },
+      onChange: ({ value: formData }) =>
+        validateSetDsoConfigRulesFormFields(formData, currentMigrationId),
       onSubmit: ({ value: formData }) => {
+        const formError = validateSetDsoConfigRulesFormFields(formData, currentMigrationId);
+        if (formError) return formError;
+
         const changes = configFormDataToConfigChanges(formData.config, dsoConfigChanges);
 
         if (changes.length === 0) {
@@ -242,7 +299,15 @@ export const SetDsoConfigRulesForm: () => JSX.Element = () => {
             </Typography>
 
             {dsoConfigChanges.map((change, index) => (
-              <form.AppField name={`config.${change.fieldName}`} key={index}>
+              <form.AppField
+                name={`config.${change.fieldName}`}
+                key={index}
+                validators={
+                  synchronizerUpgradeFieldValidators[
+                    change.fieldName as keyof typeof synchronizerUpgradeFieldValidators
+                  ]
+                }
+              >
                 {field => (
                   <field.ConfigField
                     configChange={change}
@@ -251,6 +316,7 @@ export const SetDsoConfigRulesForm: () => JSX.Element = () => {
                       f => f.fieldName === change.fieldName
                     )}
                     effectiveDate={form.state.values.common.effectiveDate.effectiveDate}
+                    currentMigrationId={currentMigrationId}
                   />
                 )}
               </form.AppField>

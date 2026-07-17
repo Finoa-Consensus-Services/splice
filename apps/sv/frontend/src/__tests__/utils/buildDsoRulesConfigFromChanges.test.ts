@@ -119,7 +119,35 @@ describe('buildDsoRulesConfigFromChanges', () => {
     });
   });
 
-  it('should handle voteCooldownTime when provided', () => {
+  it('should set nextScheduledSynchronizerUpgrade to null when only upgrade time is provided', () => {
+    const changes: ConfigChange[] = [
+      {
+        fieldName: 'nextScheduledSynchronizerUpgradeTime',
+        label: 'Upgrade Time',
+        currentValue: '',
+        newValue: '2023-01-01T00:00:00Z',
+      },
+    ];
+    const result = buildDsoRulesConfigFromChanges(changes);
+
+    expect(result.nextScheduledSynchronizerUpgrade).toBeNull();
+  });
+
+  it('should set nextScheduledSynchronizerUpgrade to null when only migration id is provided', () => {
+    const changes: ConfigChange[] = [
+      {
+        fieldName: 'nextScheduledSynchronizerUpgradeMigrationId',
+        label: 'Migration ID',
+        currentValue: '',
+        newValue: '1',
+      },
+    ];
+    const result = buildDsoRulesConfigFromChanges(changes);
+
+    expect(result.nextScheduledSynchronizerUpgrade).toBeNull();
+  });
+
+  it('should handle voteCooldownTime when not provided', () => {
     const changes: ConfigChange[] = [];
     const result = buildDsoRulesConfigFromChanges(changes);
     expect(result.voteCooldownTime).toBeNull();

@@ -48,6 +48,7 @@ export function buildDsoRulesConfigFromChanges(dsoConfigChanges: ConfigChange[])
   }
 
   const upgradeTime = getValue('nextScheduledSynchronizerUpgradeTime', true);
+  const upgradeMigrationId = getValue('nextScheduledSynchronizerUpgradeMigrationId', true);
   const logicalSyncUpgradeTopologyFreezeTime = getValue(
     'nextScheduledLogicalSynchronizerUpgradeTopologyFreezeTime',
     true
@@ -98,11 +99,11 @@ export function buildDsoRulesConfigFromChanges(dsoConfigChanges: ConfigChange[])
     },
 
     nextScheduledSynchronizerUpgrade:
-      upgradeTime === null
+      upgradeTime === null || upgradeMigrationId === null
         ? null
         : {
             time: upgradeTime,
-            migrationId: getValue('nextScheduledSynchronizerUpgradeMigrationId', false),
+            migrationId: upgradeMigrationId,
           },
     nextScheduledLogicalSynchronizerUpgrade:
       logicalSyncUpgradeTopologyFreezeTime === null

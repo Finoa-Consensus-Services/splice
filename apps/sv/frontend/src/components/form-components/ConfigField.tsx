@@ -3,17 +3,39 @@
 
 import { Link as RouterLink } from 'react-router';
 import { Box, Divider, TextField as MuiTextField, Typography } from '@mui/material';
+import type { FormHelperTextProps } from '@mui/material';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useFieldContext } from '../../hooks/formContext';
 import type { ConfigChange, PendingConfigFieldInfo } from '../../utils/types';
+import { getConfigFieldCurrentConfigurationValue } from '../../utils/migrationId';
 import { nextScheduledSynchronizerUpgradeFormat } from '@canton-network/splice-common-frontend-utils';
 
 dayjs.extend(relativeTime);
 
+const configFieldErrorFormHelperTextProps = (testId: string): Partial<FormHelperTextProps> =>
+  ({
+    sx: {
+      color: '#FD8575',
+      fontFeatureSettings: "'liga' off, 'clig' off",
+      fontFamily: 'Inter',
+      fontSize: '12px',
+      fontStyle: 'normal',
+      fontWeight: 400,
+      lineHeight: '16px',
+      alignSelf: 'stretch',
+      wordBreak: 'break-word',
+      overflowWrap: 'break-word',
+      mx: 0,
+      mt: 0.5,
+    },
+    'data-testid': testId,
+  }) as Partial<FormHelperTextProps>;
+
 export interface ConfigFieldProps {
   configChange: ConfigChange;
   effectiveDate?: string | undefined;
+  currentMigrationId?: number | undefined;
   pendingFieldInfo?: PendingConfigFieldInfo;
 }
 
@@ -23,7 +45,7 @@ export type ConfigFieldState = {
 };
 
 export const ConfigField: React.FC<ConfigFieldProps> = props => {
-  const { configChange, effectiveDate, pendingFieldInfo } = props;
+  const { configChange, effectiveDate, currentMigrationId, pendingFieldInfo } = props;
   const field = useFieldContext<ConfigFieldState>();
 
   const isSynchronizerUpgradeTime = [
@@ -31,9 +53,9 @@ export const ConfigField: React.FC<ConfigFieldProps> = props => {
     'nextScheduledLogicalSynchronizerUpgradeTopologyFreezeTime',
     'nextScheduledLogicalSynchronizerUpgradeUpgradeTime',
   ].includes(field.state.value?.fieldName);
-  const isSynchronizerUpgradeField =
-    field.state.value?.fieldName.startsWith('nextScheduledSynchronizerUpgrade') ||
-    field.state.value?.fieldName.startsWith('nextScheduledLogicalSynchronizerUpgrade');
+  const isSynchronizerUpgradeMigrationIdField =
+    field.state.value?.fieldName === 'nextScheduledSynchronizerUpgradeMigrationId';
+  const isFieldEdited = !field.state.meta.isDefaultValue;
 
   // We disable the field if it is pending and the value is the default value.
   // The default value check is to handle the case where the user made a change
@@ -44,6 +66,10 @@ export const ConfigField: React.FC<ConfigFieldProps> = props => {
 
   const isEffectiveAtThreshold = !effectiveDate;
 
+  const isSynchronizerUpgradeField =
+    field.state.value?.fieldName.startsWith('nextScheduledSynchronizerUpgrade') ||
+    field.state.value?.fieldName.startsWith('nextScheduledLogicalSynchronizerUpgrade');
+
   // When effective at Threshold, we disable the upgrade time and migrationId config fields
   const isEffectiveAtThresholdAndSyncUpgradeTimeOrMigrationId =
     isEffectiveAtThreshold && (isSynchronizerUpgradeTime || isSynchronizerUpgradeField);
@@ -53,17 +79,36 @@ export const ConfigField: React.FC<ConfigFieldProps> = props => {
     isEffectiveAtThresholdAndSyncUpgradeTimeOrMigrationId ||
     configChange.disabled;
 
+  const displayedCurrentConfiguration = getConfigFieldCurrentConfigurationValue(
+    configChange.fieldName,
+    configChange.currentValue,
+    currentMigrationId
+  );
+  const fieldError = field.state.meta.errors?.[0];
+  const showFieldError = !field.state.meta.isValid && Boolean(fieldError);
+
+  const showCurrentConfiguration = isFieldEdited && !isSynchronizerUpgradeTime;
+  const showCurrentConfigurationSubtext =
+    showCurrentConfiguration && (!showFieldError || isSynchronizerUpgradeMigrationIdField);
+
   const textFieldProps = {
     variant: 'outlined' as const,
     size: 'small' as const,
-    color: field.state.meta.isDefaultValue ? ('primary' as const) : ('secondary' as const),
-    focused: !field.state.meta.isDefaultValue,
+    ...(showFieldError
+      ? {}
+      : {
+          color: field.state.meta.isDefaultValue ? ('primary' as const) : ('secondary' as const),
+          focused: !field.state.meta.isDefaultValue,
+        }),
     autoComplete: 'off' as const,
     inputProps: {
       sx: { textAlign: 'right' },
       'data-testid': `config-field-${configChange.fieldName}`,
     },
     disabled: isDisabled,
+    FormHelperTextProps: showFieldError
+      ? configFieldErrorFormHelperTextProps(`config-field-error-${configChange.fieldName}`)
+      : undefined,
   };
 
   return (
@@ -72,10 +117,10 @@ export const ConfigField: React.FC<ConfigFieldProps> = props => {
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center',
+          alignItems: 'flex-start',
         }}
       >
-        <Box>
+        <Box sx={{ flex: 1, minWidth: 0, pr: 2 }}>
           <Typography variant="body1" data-testid={`config-label-${configChange.fieldName}`}>
             {configChange.label}
           </Typography>
@@ -89,9 +134,12 @@ export const ConfigField: React.FC<ConfigFieldProps> = props => {
           </Typography>
         </Box>
 
-        <Box sx={{ width: 250 }}>
+        <Box sx={{ width: 250, maxWidth: '100%', flexShrink: 0, minWidth: 0 }}>
           <MuiTextField
             {...textFieldProps}
+            fullWidth
+            error={showFieldError}
+            helperText={showFieldError ? fieldError : undefined}
             // We choose empty string to represent fields that could be undefined because their values have not been set.
             value={field.state.value?.value || ''}
             onBlur={field.handleBlur}
@@ -103,14 +151,27 @@ export const ConfigField: React.FC<ConfigFieldProps> = props => {
             }
           />
 
-          {!field.state.meta.isDefaultValue && (
+          {showCurrentConfigurationSubtext && (
             <Typography
               variant="caption"
               color="text.secondary"
               sx={{ mt: 0.5, display: 'block' }}
               data-testid={`config-current-value-${configChange.fieldName}`}
             >
-              Current Configuration: {configChange.currentValue}
+              Current Configuration: {displayedCurrentConfiguration}
+            </Typography>
+          )}
+
+          {isSynchronizerUpgradeMigrationIdField && !isFieldEdited && (
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ mt: 0.5, display: 'block' }}
+              data-testid="nextScheduledSynchronizerUpgradeMigrationId-current"
+            >
+              {currentMigrationId !== undefined
+                ? `Current migration ID: ${currentMigrationId}`
+                : 'Current migration ID unavailable'}
             </Typography>
           )}
 

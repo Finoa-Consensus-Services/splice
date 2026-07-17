@@ -3,7 +3,10 @@
 
 import dayjs from 'dayjs';
 import { z } from 'zod';
+import { nextScheduledSynchronizerUpgradeFormat } from '@canton-network/splice-common-frontend-utils';
+import { validateMigrationIdAgainstCurrent } from '../../utils/migrationId';
 import type { EffectivityType } from '../../utils/types';
+import type { CommonProposalFormData, ConfigFormData } from '../../utils/types';
 import { isValidUrl } from '../../utils/validations';
 
 export const urlSchema = z.string().refine(url => isValidUrl(url), {
@@ -181,29 +184,176 @@ export const validatePartyId = (value: string): string | false => {
   return result.success ? false : result.error.issues[0].message;
 };
 
-export const validateNextScheduledSynchronizerUpgrade = (
+const isValidSynchronizerUpgradeTimeFormat = (value: string): boolean =>
+  dayjs.utc(value, nextScheduledSynchronizerUpgradeFormat, true).isValid();
+
+export const SYNCHRONIZER_UPGRADE_MUTUAL_REQUIREMENT_MESSAGE =
+  'Upgrade Time and Migration ID are required for a Scheduled Synchronizer Upgrade';
+
+type SynchronizerUpgradeErrorField = 'migrationId' | 'upgradeTime' | 'both';
+
+type SynchronizerUpgradeValidationResult =
+  | false
+  | { field: SynchronizerUpgradeErrorField; message: string };
+
+const normalizeSynchronizerUpgradeFields = (upgradeTime: string, migrationId: string) => ({
+  upgradeTime: upgradeTime.trim(),
+  migrationId: migrationId.trim(),
+});
+
+const validateNextScheduledSynchronizerUpgradeResult = (
   upgradeTime: string,
   migrationId: string,
-  effectiveDate: string | undefined
-): string | false => {
-  const onlyOneIsProvided = (upgradeTime === '') !== (migrationId === '');
-  const bothEmpty = upgradeTime === '' && migrationId === '';
+  effectiveDate: string | undefined,
+  currentMigrationId: number | undefined
+): SynchronizerUpgradeValidationResult => {
+  // Physical synchronizer upgrade fields are disabled for effective-at-threshold proposals.
+  if (effectiveDate === undefined) {
+    return false;
+  }
+
+  const { upgradeTime: normalizedUpgradeTime, migrationId: normalizedMigrationId } =
+    normalizeSynchronizerUpgradeFields(upgradeTime, migrationId);
+  const onlyOneIsProvided = (normalizedUpgradeTime === '') !== (normalizedMigrationId === '');
+  const bothEmpty = normalizedUpgradeTime === '' && normalizedMigrationId === '';
 
   if (bothEmpty) {
     return false;
   }
 
   if (onlyOneIsProvided) {
-    return 'Upgrade Time and Migration ID are required for a Scheduled Synchronizer Upgrade';
+    return { field: 'both', message: SYNCHRONIZER_UPGRADE_MUTUAL_REQUIREMENT_MESSAGE };
   }
 
-  const upgradeTimeDate = dayjs.utc(upgradeTime);
+  if (!isValidSynchronizerUpgradeTimeFormat(normalizedUpgradeTime)) {
+    return {
+      field: 'upgradeTime',
+      message: `Upgrade Time must be in ${nextScheduledSynchronizerUpgradeFormat} format`,
+    };
+  }
+
+  const migrationIdError = validateMigrationIdAgainstCurrent(
+    normalizedMigrationId,
+    currentMigrationId
+  );
+  if (migrationIdError) {
+    return { field: 'migrationId', message: migrationIdError };
+  }
+
+  const upgradeTimeDate = dayjs.utc(normalizedUpgradeTime);
   const effectivity = dayjs(effectiveDate);
 
   const upgradeTimeIsAfterEffectiveDate = upgradeTimeDate.isAfter(effectivity.add(1, 'hour'));
   if (!upgradeTimeIsAfterEffectiveDate) {
-    return 'Upgrade Time must be at least 1 hour after the Effective Date';
+    return {
+      field: 'upgradeTime',
+      message: 'Upgrade Time must be at least 1 hour after the Effective Date',
+    };
   }
+
+  return false;
+};
+
+export const validateNextScheduledSynchronizerUpgrade = (
+  upgradeTime: string,
+  migrationId: string,
+  effectiveDate: string | undefined,
+  currentMigrationId: number | undefined
+): string | false => {
+  const result = validateNextScheduledSynchronizerUpgradeResult(
+    upgradeTime,
+    migrationId,
+    effectiveDate,
+    currentMigrationId
+  );
+
+  return result ? result.message : false;
+};
+
+type SynchronizerUpgradeField = 'migrationId' | 'upgradeTime';
+
+export const getSynchronizerUpgradeFieldError = (
+  field: SynchronizerUpgradeField,
+  upgradeTime: string,
+  migrationId: string,
+  effectiveDate: string | undefined,
+  currentMigrationId: number | undefined
+): string | false => {
+  if (effectiveDate === undefined) {
+    return false;
+  }
+
+  const { upgradeTime: normalizedUpgradeTime, migrationId: normalizedMigrationId } =
+    normalizeSynchronizerUpgradeFields(upgradeTime, migrationId);
+
+  if (normalizedMigrationId === '' && normalizedUpgradeTime === '') {
+    return false;
+  }
+
+  if (field === 'migrationId' && normalizedMigrationId !== '') {
+    const migrationIdError = validateMigrationIdAgainstCurrent(
+      normalizedMigrationId,
+      currentMigrationId
+    );
+    if (migrationIdError) {
+      return migrationIdError;
+    }
+  }
+
+  const result = validateNextScheduledSynchronizerUpgradeResult(
+    normalizedUpgradeTime,
+    normalizedMigrationId,
+    effectiveDate,
+    currentMigrationId
+  );
+  if (!result) {
+    return false;
+  }
+
+  if (field === 'migrationId') {
+    return result.field === 'migrationId' || result.field === 'both' ? result.message : false;
+  }
+
+  if (result.field === 'upgradeTime') {
+    return result.message;
+  }
+
+  return result.field === 'both' && normalizedUpgradeTime !== '' ? result.message : false;
+};
+
+export const validateSetDsoConfigRulesFormFields = (
+  formData: { common: CommonProposalFormData; config: ConfigFormData },
+  currentMigrationId: number | undefined
+): string | false => {
+  const expiryError = validateExpiryEffectiveDate({
+    expiration: formData.common.expiryDate,
+    effectiveDate: formData.common.effectiveDate.effectiveDate,
+  });
+
+  if (expiryError) return expiryError;
+
+  const effectiveDate = formData.common.effectiveDate.effectiveDate;
+  const syncUpgradeTime = formData.config.nextScheduledSynchronizerUpgradeTime?.value ?? '';
+  const syncMigrationId = formData.config.nextScheduledSynchronizerUpgradeMigrationId?.value ?? '';
+
+  const synchronizerUpgradeError = validateNextScheduledSynchronizerUpgrade(
+    syncUpgradeTime,
+    syncMigrationId,
+    effectiveDate,
+    currentMigrationId
+  );
+  if (synchronizerUpgradeError) return synchronizerUpgradeError;
+
+  const logicalSynchronizerUpgradeError = validateNextScheduledLogicalSynchronizerUpgrade(
+    formData.config.nextScheduledLogicalSynchronizerUpgradeTopologyFreezeTime?.value ?? '',
+    formData.config.nextScheduledLogicalSynchronizerUpgradeUpgradeTime?.value ?? '',
+    formData.config.nextScheduledLogicalSynchronizerUpgradeNewPhysicalSynchronizerSerial?.value ??
+      '',
+    formData.config.nextScheduledLogicalSynchronizerUpgradeNewPhysicalSynchronizerProtocolVersion
+      ?.value ?? '',
+    effectiveDate
+  );
+  if (logicalSynchronizerUpgradeError) return logicalSynchronizerUpgradeError;
 
   return false;
 };

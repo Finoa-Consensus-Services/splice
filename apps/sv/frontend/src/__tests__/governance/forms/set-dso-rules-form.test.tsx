@@ -5,6 +5,7 @@ import {
   dateTimeFormatISO,
   nextScheduledSynchronizerUpgradeFormat,
 } from '@canton-network/splice-common-frontend-utils';
+import { dsoInfo } from '@canton-network/splice-common-test-handlers';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import dayjs from 'dayjs';
@@ -12,6 +13,7 @@ import { http, HttpResponse } from 'msw';
 import { describe, expect, test } from 'vitest';
 import App from '../../../App';
 import { SetDsoConfigRulesForm } from '../../../components/forms/SetDsoConfigRulesForm';
+import { SYNCHRONIZER_UPGRADE_MUTUAL_REQUIREMENT_MESSAGE } from '../../../components/forms/formValidators';
 import { SvConfigProvider } from '../../../utils';
 import { Wrapper } from '../../helpers';
 import { svPartyId } from '../../mocks/constants';
@@ -481,8 +483,7 @@ describe('Next Scheduled Synchronizer Upgrade', () => {
         <SetDsoConfigRulesForm />
       </Wrapper>
     );
-    const errorMessage =
-      'Upgrade Time and Migration ID are required for a Scheduled Synchronizer Upgrade';
+    const errorMessage = SYNCHRONIZER_UPGRADE_MUTUAL_REQUIREMENT_MESSAGE;
 
     expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
 
@@ -492,10 +493,12 @@ describe('Next Scheduled Synchronizer Upgrade', () => {
     );
     expect(migrationIdInput).toBeInTheDocument();
 
-    await user.type(migrationIdInput, '12345');
+    await user.type(migrationIdInput, '1');
 
     await waitFor(() => {
-      expect(screen.queryByText(errorMessage)).toBeInTheDocument();
+      expect(
+        screen.getByTestId('config-field-error-nextScheduledSynchronizerUpgradeMigrationId')
+      ).toHaveTextContent(errorMessage);
     });
 
     // Error should be gone when migration ID is cleared
@@ -503,7 +506,9 @@ describe('Next Scheduled Synchronizer Upgrade', () => {
     await user.click(screen.getByTestId('set-dso-config-rules-action'));
 
     await waitFor(() => {
-      expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('config-field-error-nextScheduledSynchronizerUpgradeMigrationId')
+      ).not.toBeInTheDocument();
     });
 
     const timeInput = screen.getByTestId('config-field-nextScheduledSynchronizerUpgradeTime');
@@ -513,14 +518,18 @@ describe('Next Scheduled Synchronizer Upgrade', () => {
     await user.type(timeInput, futureTime);
 
     await waitFor(() => {
-      expect(screen.queryByText(errorMessage)).toBeInTheDocument();
+      expect(
+        screen.getByTestId('config-field-error-nextScheduledSynchronizerUpgradeTime')
+      ).toHaveTextContent(errorMessage);
     });
 
     // Error should be gone when upgrade time is cleared
     await user.clear(timeInput);
 
     await waitFor(() => {
-      expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('config-field-error-nextScheduledSynchronizerUpgradeTime')
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -553,22 +562,182 @@ describe('Next Scheduled Synchronizer Upgrade', () => {
       .add(30, 'minute')
       .format(nextScheduledSynchronizerUpgradeFormat);
     await user.type(timeInput, invalidTime);
-    await user.type(migrationIdInput, '12345');
+    await user.type(migrationIdInput, '1');
 
     await waitFor(() => {
-      expect(screen.queryByText(errorMessage)).toBeInTheDocument();
+      expect(
+        screen.getByTestId('config-field-error-nextScheduledSynchronizerUpgradeTime')
+      ).toHaveTextContent(errorMessage);
+    });
+  });
+
+  test('shows current migration id subtext before the field is edited', async () => {
+    render(
+      <Wrapper>
+        <SetDsoConfigRulesForm />
+      </Wrapper>
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId('nextScheduledSynchronizerUpgradeMigrationId-current')
+      ).toHaveTextContent('Current migration ID: 0');
     });
 
-    // Set upgrade time to be more than 1 hour after effective date - error should disappear
+    expect(
+      screen.queryByTestId('config-current-value-nextScheduledSynchronizerUpgradeMigrationId')
+    ).not.toBeInTheDocument();
+  });
+
+  test('does not show current configuration for synchronizer upgrade time fields', async () => {
+    const user = userEvent.setup();
+    render(
+      <Wrapper>
+        <SetDsoConfigRulesForm />
+      </Wrapper>
+    );
+
+    const effectiveDate = dayjs().add(10, 'day').format(dateTimeFormatISO);
+    fireEvent.change(screen.getByTestId('set-dso-config-rules-effective-date-field'), {
+      target: { value: effectiveDate },
+    });
+
     const validTime = dayjs(effectiveDate)
       .utc()
       .add(2, 'hours')
       .format(nextScheduledSynchronizerUpgradeFormat);
-    await user.clear(timeInput);
-    await user.type(timeInput, validTime);
+
+    await user.type(
+      screen.getByTestId('config-field-nextScheduledSynchronizerUpgradeTime'),
+      validTime
+    );
+
+    expect(
+      screen.queryByTestId('config-current-value-nextScheduledSynchronizerUpgradeTime')
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId('nextScheduledSynchronizerUpgradeTime-default')).toBeInTheDocument();
+  });
+
+  test('shows current configuration but not migration id subtext when field changes', async () => {
+    const user = userEvent.setup();
+    render(
+      <Wrapper>
+        <SetDsoConfigRulesForm />
+      </Wrapper>
+    );
+
+    const effectiveDate = dayjs().add(10, 'day').format(dateTimeFormatISO);
+    fireEvent.change(screen.getByTestId('set-dso-config-rules-effective-date-field'), {
+      target: { value: effectiveDate },
+    });
+
+    const validTime = dayjs(effectiveDate)
+      .utc()
+      .add(2, 'hours')
+      .format(nextScheduledSynchronizerUpgradeFormat);
+
+    await user.type(
+      screen.getByTestId('config-field-nextScheduledSynchronizerUpgradeTime'),
+      validTime
+    );
+
+    const migrationIdInput = screen.getByTestId(
+      'config-field-nextScheduledSynchronizerUpgradeMigrationId'
+    );
+    await user.type(migrationIdInput, '1');
 
     await waitFor(() => {
-      expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
+      expect(
+        screen.getByTestId('config-current-value-nextScheduledSynchronizerUpgradeMigrationId')
+      ).toHaveTextContent('Current Configuration: 0');
+      expect(
+        screen.queryByTestId('nextScheduledSynchronizerUpgradeMigrationId-current')
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  test('shows field error for invalid migration id format without upgrade time', async () => {
+    const user = userEvent.setup();
+    render(
+      <Wrapper>
+        <SetDsoConfigRulesForm />
+      </Wrapper>
+    );
+
+    await user.type(
+      screen.getByTestId('config-field-nextScheduledSynchronizerUpgradeMigrationId'),
+      'abc'
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId('config-field-error-nextScheduledSynchronizerUpgradeMigrationId')
+      ).toHaveTextContent('Migration ID must be a whole number');
+    });
+  });
+
+  test('shows field error when migration id is not current + 1 without upgrade time', async () => {
+    const user = userEvent.setup();
+    render(
+      <Wrapper>
+        <SetDsoConfigRulesForm />
+      </Wrapper>
+    );
+
+    await user.type(
+      screen.getByTestId('config-field-nextScheduledSynchronizerUpgradeMigrationId'),
+      '2'
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId('config-field-error-nextScheduledSynchronizerUpgradeMigrationId')
+      ).toHaveTextContent('Migration ID must be 1 (current migration ID + 1)');
+      expect(
+        screen.getByTestId('config-current-value-nextScheduledSynchronizerUpgradeMigrationId')
+      ).toHaveTextContent('Current Configuration: 0');
+    });
+  });
+
+  test('skips synchronizer upgrade validation when effective at threshold', async () => {
+    const user = userEvent.setup();
+    render(
+      <Wrapper>
+        <SetDsoConfigRulesForm />
+      </Wrapper>
+    );
+
+    await user.click(screen.getByLabelText(/Make effective at threshold/i));
+
+    await user.type(
+      screen.getByTestId('config-field-nextScheduledSynchronizerUpgradeMigrationId'),
+      'abc'
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId('config-field-error-nextScheduledSynchronizerUpgradeMigrationId')
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  test('shows unavailable message when current migration id cannot be determined', async () => {
+    server.use(
+      http.get(`${svUrl}/v0/dso`, () => {
+        return HttpResponse.json({ ...dsoInfo, sv_node_states: [] });
+      })
+    );
+
+    render(
+      <Wrapper>
+        <SetDsoConfigRulesForm />
+      </Wrapper>
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId('nextScheduledSynchronizerUpgradeMigrationId-current')
+      ).toHaveTextContent('Current migration ID unavailable');
     });
   });
 });
