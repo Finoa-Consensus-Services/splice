@@ -269,6 +269,17 @@ class SingleScanConnection private[client] (
       HttpScanAppClient.ListDsoRulesVoteRequests(),
     )
 
+  override def lookupDsoRulesVoteRequest(
+      trackingId: VoteRequest.ContractId
+  )(implicit
+      tc: TraceContext,
+      ec: ExecutionContext,
+  ): Future[Option[Contract[VoteRequest.ContractId, VoteRequest]]] =
+    runHttpCmd(
+      config.adminApi.url,
+      HttpScanAppClient.LookupVoteRequest(trackingId),
+    )
+
   override def getExternalPartyAmuletRules()(implicit
       ec: ExecutionContext,
       tc: TraceContext,

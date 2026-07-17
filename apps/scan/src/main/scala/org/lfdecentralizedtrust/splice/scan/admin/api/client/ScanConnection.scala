@@ -212,6 +212,33 @@ trait ScanConnection
   ): Future[Seq[Contract[VoteRequest.ContractId, VoteRequest]]] =
     listVoteRequests()
 
+  def lookupDsoRulesVoteRequest(
+      trackingId: VoteRequest.ContractId
+  )(implicit
+      tc: TraceContext,
+      ec: ExecutionContext,
+  ): Future[Option[Contract[VoteRequest.ContractId, VoteRequest]]]
+
+  /** Original VoteRequest ledger create time for the given tracking contract id.
+    *
+    * Must not use ACS `created_at`: `CastVote` archives and recreates the contract, so the
+    * active ACS row's `created_at` is the latest recreation time. Scan resolves this via
+    * `update_history_creates` when listing vote requests. `VoteRequestTxLogEntry` only records
+    * closed votes and cannot fix open Action Required rows.
+    */
+  def lookupVoteRequestOriginalCreatedAt(
+      trackingId: VoteRequest.ContractId
+  )(implicit
+      tc: TraceContext,
+      ec: ExecutionContext,
+  ): Future[Option[java.time.Instant]] =
+    listVoteRequests().map { requests =>
+      requests.collectFirst {
+        case request if VoteRequestContractUtil.trackingId(request) == trackingId =>
+          request.createdAt
+      }
+    }
+
   def getAmuletRules()(implicit
       tc: TraceContext
   ): Future[Contract[AmuletRules.ContractId, AmuletRules]] =

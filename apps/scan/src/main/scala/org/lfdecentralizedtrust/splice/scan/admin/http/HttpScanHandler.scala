@@ -36,6 +36,7 @@ import org.lfdecentralizedtrust.splice.codegen.java.splice.{amulet, ans as ansCo
 import org.lfdecentralizedtrust.splice.codegen.java.splice.amuletrules.AmuletRules
 import org.lfdecentralizedtrust.splice.codegen.java.splice.dso.decentralizedsynchronizer.SynchronizerNodeConfig
 import org.lfdecentralizedtrust.splice.codegen.java.splice.dso.svstate.SvNodeState
+import org.lfdecentralizedtrust.splice.codegen.java.splice.dsorules.VoteRequest
 import org.lfdecentralizedtrust.splice.codegen.java.splice.externalpartyamuletrules.{
   ExternalPartyAmuletRules,
   TransferCommand,
@@ -134,7 +135,7 @@ import java.time.{Instant, OffsetDateTime, ZoneOffset}
 import java.util.Base64
 import java.util.zip.GZIPOutputStream
 import scala.collection.concurrent
-import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 import scala.concurrent.duration.*
 import scala.jdk.CollectionConverters.*
 import scala.jdk.OptionConverters.*
@@ -181,6 +182,18 @@ class HttpScanHandler(
   override protected val workflowId: String = this.getClass.getSimpleName
   override protected val votesStore: VotesStore = store
   override protected val validatorLicensesStore: AppStore = store
+
+  override protected def voteRequestOriginalCreatedAt(
+      trackingId: VoteRequest.ContractId
+  )(implicit
+      tc: TraceContext,
+      ec: ExecutionContext,
+  ): Future[Option[java.time.Instant]] =
+    // Historical create event — not ACS. ACS lookupDsoRulesVoteRequest returns the current
+    // recreated contract after CastVote; VoteRequestTxLogEntry only exists after close.
+    updateHistory
+      .lookupContractById(VoteRequest.COMPANION)(trackingId)
+      .map(_.map(_.createdAt))
 
   private val initializedBftSequencersCache
       : concurrent.Map[Int, definitions.SynchronizerBftSequencer] =

@@ -49,7 +49,7 @@ import org.lfdecentralizedtrust.splice.sv.{LocalSynchronizerNode, SvApp}
 import org.lfdecentralizedtrust.splice.util.{Codec, Contract, TemplateJsonDecoder}
 
 import java.util.Optional
-import scala.concurrent.{blocking, ExecutionContextExecutor, Future}
+import scala.concurrent.{blocking, ExecutionContext, ExecutionContextExecutor, Future}
 
 class HttpSvOperatorHandler(
     svStoreWithIngestion: AppStoreWithIngestion[SvSvStore],
@@ -85,6 +85,29 @@ class HttpSvOperatorHandler(
   private val mutex = Mutex()
   override protected val votesStore: ActiveVotesStore = dsoStore
   override protected val validatorLicensesStore: AppStore = dsoStore
+
+  override protected def voteRequestOriginalCreatedAt(
+      trackingId: spliceCodegen.dsorules.VoteRequest.ContractId
+  )(implicit
+      tc: TraceContext,
+      ec: ExecutionContext,
+  ): Future[Option[java.time.Instant]] =
+    // Do not use Scan.lookupDsoRulesVoteRequest / ACS created_at: that endpoint looks up the
+    // current ACS contract by trackingCid, whose ledger created_at is the last CastVote
+    // recreation. Scan resolves the original create time from update_history_creates.
+    scanConnectionF.flatMap(_.lookupVoteRequestOriginalCreatedAt(trackingId))
+
+  override def listDsoRulesVoteRequests(implicit
+      tc: TraceContext,
+      ec: ExecutionContext,
+  ): Future[definitions.ListDsoRulesVoteRequestsResponse] = {
+    withSpan(s"$workflowId.listDsoRulesVoteRequests") { _ => _ =>
+      // Prefer Scan's list: each created_at is already corrected via update history.
+      scanConnectionF
+        .flatMap(_.getVoteRequests())
+        .map(reqs => definitions.ListDsoRulesVoteRequestsResponse(reqs.map(_.toHttp).toVector))
+    }
+  }
 
   // Similar to PublishScanConfigTrigger, this class creates its own scan connection
   // on demand, because scan might not be available at application startup.

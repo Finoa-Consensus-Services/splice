@@ -18,7 +18,7 @@ import io.grpc.{Status, StatusRuntimeException}
 import io.grpc.Status.Code
 import io.opentelemetry.api.trace.Tracer
 import org.lfdecentralizedtrust.splice.admin.http.HttpErrorHandler
-import org.lfdecentralizedtrust.splice.codegen.java.splice.dsorules.DsoRules
+import org.lfdecentralizedtrust.splice.codegen.java.splice.dsorules.{DsoRules, VoteRequest}
 import org.lfdecentralizedtrust.splice.codegen.java.splice.svonboarding.SvOnboardingRequest
 import org.lfdecentralizedtrust.splice.codegen.java.splice.validatoronboarding.ValidatorOnboarding
 import org.lfdecentralizedtrust.splice.config.Thresholds
@@ -41,7 +41,9 @@ import org.lfdecentralizedtrust.splice.sv.util.{Secrets, SvOnboardingToken}
 import org.lfdecentralizedtrust.splice.sv.util.SvUtil.generateRandomOnboardingSecret
 import org.lfdecentralizedtrust.splice.util.{Codec, Contract}
 
+import java.time.Instant
 import java.util.Base64
+import scala.annotation.unused
 import scala.concurrent.{ExecutionContext, Future}
 import scala.jdk.CollectionConverters.*
 import scala.jdk.OptionConverters.*
@@ -74,6 +76,13 @@ class HttpSvPublicHandler(
 
   override protected val votesStore: ActiveVotesStore = dsoStore
   override protected val workflowId: String = this.getClass.getSimpleName
+
+  override protected def voteRequestOriginalCreatedAt(
+      @unused trackingId: VoteRequest.ContractId
+  )(implicit
+      @unused tc: TraceContext,
+      @unused ec: ExecutionContext,
+  ): Future[Option[Instant]] = Future.successful(None)
 
   /** Intended use: Other validators call this endpoint to onboard themselves,
     * passing their onboarding secret in the request payload.
