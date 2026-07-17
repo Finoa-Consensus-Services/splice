@@ -134,7 +134,6 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
                     },
                     inputProps: {
                       'data-testid': `${id}-field`,
-                      readOnly: true,
                     },
                     sx: theme => ({
                       width: '100%',
