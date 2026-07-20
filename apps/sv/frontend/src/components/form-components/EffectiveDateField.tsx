@@ -8,13 +8,10 @@ import { dateTimeFormatISO } from '@canton-network/splice-common-frontend-utils'
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { EffectivityType } from '../../utils/types';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { RadioSelector } from './RadioSelector';
 
 const effectiveAtDisplayFormat = 'YYYY-MM-DD HH:mm';
-
-const isPickerTriggerButton = (target: EventTarget | null) =>
-  target instanceof Element && Boolean(target.closest('button'));
 
 export interface EffectiveDateFieldProps {
   title?: string;
@@ -40,8 +37,6 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
     () => dayjs(field.state.value.effectiveDate),
     [field.state.value.effectiveDate]
   );
-
-  const [pickerOpen, setPickerOpen] = useState(false);
 
   const handleTypeChange = (type: EffectivityType) => {
     if (type === 'custom') {
@@ -79,13 +74,8 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
                   value={dateValue}
                   format={effectiveAtDisplayFormat}
                   ampm={false}
-                  open={pickerOpen}
                   sx={{ width: '100%', display: 'block' }}
-                  onOpen={() => setPickerOpen(true)}
-                  onClose={() => {
-                    setPickerOpen(false);
-                    field.handleBlur();
-                  }}
+                  onClose={() => field.handleBlur()}
                   onChange={newDate => {
                     field.handleChange({
                       type: 'custom',
@@ -115,18 +105,12 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
                       className: 'effective-date-field',
                       error: !field.state.meta.isValid,
                       helperText: field.state.meta.errors?.[0],
-                      onClick: (event: React.MouseEvent<HTMLDivElement>) => {
-                        if (isPickerTriggerButton(event.target)) {
-                          return;
-                        }
-                        setPickerOpen(true);
-                      },
+                      onBlur: field.handleBlur,
                       inputProps: {
                         'data-testid': `${id}-field`,
                       },
                       sx: theme => ({
                         width: '100%',
-                        cursor: 'pointer',
                         '& .MuiOutlinedInput-root': {
                           backgroundColor: '#363636',
                           borderRadius: '4px',
@@ -138,7 +122,6 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
                           padding: '13px 16px',
                           overflow: 'hidden',
                           minHeight: 'unset',
-                          cursor: 'pointer',
                           '& fieldset': {
                             border: 'none',
                             borderRadius: '4px',
@@ -153,7 +136,6 @@ export const EffectiveDateField: React.FC<EffectiveDateFieldProps> = props => {
                           color: theme.palette.text.light,
                           backgroundColor: 'transparent',
                           borderRadius: 0,
-                          cursor: 'pointer',
                           WebkitBoxShadow: 'none',
                         },
                         '& .MuiInputAdornment-root': {
