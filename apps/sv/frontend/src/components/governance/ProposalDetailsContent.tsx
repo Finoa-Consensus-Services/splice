@@ -8,7 +8,7 @@ import {
 } from '@daml.js/splice-dso-governance/lib/Splice/DsoRules';
 import { ContractId } from '@daml/types';
 import { ChevronLeft, Edit } from '@mui/icons-material';
-import { Box, Button, Divider, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Alert, Box, Button, Divider, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React, { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -20,6 +20,7 @@ import {
 } from '@canton-network/splice-common-frontend';
 import { Link as RouterLink } from 'react-router';
 import {
+  ConfigChange,
   ProposalDetails,
   ProposalVote,
   ProposalVotingInformation,
@@ -34,6 +35,11 @@ import { CreateUnallocatedUnclaimedActivityRecordSection } from './proposal-deta
 import { CopyableIdentifier, CopyableUrl, MemberIdentifier, VoteStats } from '../beta';
 import { useQuery } from '@tanstack/react-query';
 import { useSvAdminClient } from '../../contexts/SvAdminServiceContext';
+
+/** True when a proposal changed fields that are locked/disabled in the create UI (e.g. emergency API). */
+export function hasAlteredDisabledFields(changes: ConfigChange[]): boolean {
+  return changes.some(c => c.disabled && c.currentValue !== c.newValue);
+}
 
 dayjs.extend(relativeTime);
 
@@ -246,6 +252,15 @@ export const ProposalDetailsContent: React.FC<ProposalDetailsContentProps> = pro
 
           {proposalDetails.action === 'CRARC_SetConfig' && (
             <>
+              {hasAlteredDisabledFields(proposalDetails.proposal.configChanges) && (
+                <Alert
+                  severity="warning"
+                  variant="outlined"
+                  data-testid="proposal-details-disabled-fields-warning"
+                >
+                  Disabled fields have been altered in this vote proposal.
+                </Alert>
+              )}
               <DetailItem
                 label="Proposed Changes"
                 value={<ConfigValuesChanges changes={proposalDetails.proposal.configChanges} />}
@@ -267,6 +282,15 @@ export const ProposalDetailsContent: React.FC<ProposalDetailsContentProps> = pro
 
           {proposalDetails.action === 'SRARC_SetConfig' && (
             <>
+              {hasAlteredDisabledFields(proposalDetails.proposal.configChanges) && (
+                <Alert
+                  severity="warning"
+                  variant="outlined"
+                  data-testid="proposal-details-disabled-fields-warning"
+                >
+                  Disabled fields have been altered in this vote proposal.
+                </Alert>
+              )}
               <DetailItem
                 label="Proposed Changes"
                 value={<ConfigValuesChanges changes={proposalDetails.proposal.configChanges} />}
