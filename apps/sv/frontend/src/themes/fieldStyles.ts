@@ -222,7 +222,6 @@ const datePickerInputRootSx: SxProps<Theme> = theme => ({
   backgroundColor: fieldSurfaceBackground,
   borderRadius: '4px',
   overflow: 'hidden',
-  cursor: 'pointer',
   ...fieldOutlineSx(theme),
   ...fieldAdornmentSx,
   '&.MuiInputBase-root, &.MuiOutlinedInput-root, &.MuiInputBase-adornedEnd': {
@@ -236,7 +235,6 @@ const datePickerInputRootSx: SxProps<Theme> = theme => ({
     padding: 0,
     minHeight: 0,
     height: 'auto',
-    cursor: 'pointer',
   },
   '& .MuiInputAdornment-positionEnd': {
     marginLeft: 'auto',
@@ -249,7 +247,6 @@ const datePickerInputRootSx: SxProps<Theme> = theme => ({
 export const datePickerFieldSx: SxProps<Theme> = theme => ({
   ...fieldHelperSx,
   width: '100%',
-  cursor: 'pointer',
   '& .MuiOutlinedInput-root':
     typeof datePickerInputRootSx === 'function'
       ? datePickerInputRootSx(theme)

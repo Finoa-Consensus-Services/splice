@@ -1,7 +1,7 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import { DesktopDateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -16,9 +16,6 @@ import {
   fieldSectionTitleSx,
 } from '../../themes/fieldStyles';
 
-const isPickerTriggerButton = (target: EventTarget | null) =>
-  target instanceof Element && Boolean(target.closest('button'));
-
 export interface DateFieldProps {
   title?: string;
   description?: string;
@@ -31,7 +28,6 @@ export const DateField: React.FC<DateFieldProps> = props => {
   const field = useFieldContext<string>();
 
   const dateValue = useMemo(() => dayjs(field.state.value), [field.state.value]);
-  const [pickerOpen, setPickerOpen] = useState(false);
 
   return (
     <Box sx={fieldSectionSx}>
@@ -45,12 +41,7 @@ export const DateField: React.FC<DateFieldProps> = props => {
           format={dateTimeFormatISO}
           minDateTime={minDate || dayjs()}
           ampm={false}
-          open={pickerOpen}
-          onOpen={() => setPickerOpen(true)}
-          onClose={() => {
-            setPickerOpen(false);
-            field.handleBlur();
-          }}
+          onClose={() => field.handleBlur()}
           onChange={newDate => field.handleChange(newDate?.format(dateTimeFormatISO)!)}
           enableAccessibleFieldDOMStructure={false}
           slots={{
@@ -63,12 +54,7 @@ export const DateField: React.FC<DateFieldProps> = props => {
               id: `${id}-field`,
               error: !field.state.meta.isValid,
               helperText: field.state.meta.errors?.[0],
-              onClick: (event: React.MouseEvent<HTMLDivElement>) => {
-                if (isPickerTriggerButton(event.target)) {
-                  return;
-                }
-                setPickerOpen(true);
-              },
+              onBlur: field.handleBlur,
               sx: datePickerFieldSx,
               inputProps: {
                 'data-testid': `${id}-field`,
