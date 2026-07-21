@@ -59,6 +59,19 @@ describe('Action Required', () => {
     expect(screen.getByText('No Action Required items available')).toBeInTheDocument();
   });
 
+  test('should render custom no items message when provided', () => {
+    render(
+      <MemoryRouter>
+        <ActionRequiredSection
+          actionRequiredRequests={[]}
+          noDataMessage="No action required items match your search."
+        />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('No action required items match your search.')).toBeInTheDocument();
+  });
+
   test('should render all action required requests', () => {
     render(
       <MemoryRouter>

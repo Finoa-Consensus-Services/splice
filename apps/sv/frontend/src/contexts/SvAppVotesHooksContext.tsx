@@ -46,8 +46,7 @@ export const SvAppVotesHooksProvider: React.FC<React.PropsWithChildren> = ({ chi
           effectiveTo,
           accepted,
         },
-        limit,
-        retry
+        { limit, retry }
       );
     },
     useListVotes(contractIds: ContractId<VoteRequest>[]): UseQueryResult<SvVote[]> {

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import * as React from 'react';
 import { Box, Button, Stack, Typography } from '@mui/material';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ActionRequiredSection,
   ActionRequiredData,
@@ -18,14 +18,21 @@ import {
 import { useSvConfig } from '../utils';
 import { PageHeader } from '../components/beta';
 import { ProposalListingSection } from '../components/governance/ProposalListingSection';
+import ProposalSearch from '../components/governance/ProposalSearch';
+import {
+  filterActionRequiredData,
+  filterProposalListingData,
+  hasProposalSearchQuery,
+} from '../utils/proposalSearch';
 import {
   actionTagToTitle,
+  buildVoteHistoryData,
   computeVoteStats,
   computeYourVote,
-  getVoteResultStatus,
+  getCurrentSvName,
 } from '../utils/governance';
 import { SupportedActionTag, ProposalListingData } from '../utils/types';
-import { Link as RouterLink } from 'react-router';
+import { Link as RouterLink, useSearchParams } from 'react-router';
 import { InfoOutlined, WarningAmberOutlined } from '@mui/icons-material';
 import { useInfiniteVoteRequestResults, useVoteRequestResultsCount } from '../hooks';
 
@@ -43,6 +50,9 @@ function getAction(action: ActionRequiringConfirmation): string {
 export const Governance: React.FC = () => {
   const svConfig = useSvConfig();
   const amuletName = svConfig.spliceInstanceNames.amuletName;
+  const [searchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('q') ?? '');
+  const hasSearch = hasProposalSearchQuery(searchQuery);
 
   const votesHooks = useVotesHooks();
   const dsoInfosQuery = votesHooks.useDsoInfos();
@@ -57,46 +67,118 @@ export const Governance: React.FC = () => {
 
   const svPartyId = dsoInfosQuery.data?.svPartyId;
   const votingThreshold = dsoInfosQuery.data?.votingThreshold;
+  const svs = dsoInfosQuery.data?.dsoRules.payload.svs;
+
   const alreadyVotedRequestIds: Set<ContractId<VoteRequest>> = useMemo(() => {
     return svPartyId && votesQuery.data
       ? new Set(votesQuery.data.filter(v => v.voter === svPartyId).map(v => v.requestCid))
       : new Set();
   }, [votesQuery.data, svPartyId]);
 
+  const requestByContractId = useMemo(() => {
+    const map = new globalThis.Map<string, VoteRequest>();
+    listVoteRequestsQuery.data?.forEach(contract => {
+      const trackingCid = (contract.payload.trackingCid || contract.contractId) as string;
+      map.set(trackingCid, contract.payload);
+    });
+    return map;
+  }, [listVoteRequestsQuery.data]);
+
+  const voteHistoryRequestByContractId = useMemo(() => {
+    const map = new globalThis.Map(requestByContractId);
+    voteResultsInfiniteQuery.data?.pages.forEach(page => {
+      page.results.forEach(result => {
+        const trackingCid = result.request.trackingCid as string;
+        if (trackingCid) {
+          map.set(trackingCid, result.request);
+        }
+      });
+    });
+    return map;
+  }, [requestByContractId, voteResultsInfiniteQuery.data?.pages]);
+
   const voteHistory = useMemo(() => {
     const pages = voteResultsInfiniteQuery.data?.pages;
     if (!pages || !svPartyId || votingThreshold === undefined) return [];
 
     const allVoteResults = pages.flatMap(page => page.results);
-
-    return allVoteResults
-      .filter(
-        vr =>
-          (vr.outcome.tag === 'VRO_Accepted' &&
-            dayjs(vr.outcome.value.effectiveAt).isBefore(dayjs())) ||
-          vr.outcome.tag === 'VRO_Expired' ||
-          vr.outcome.tag === 'VRO_Rejected'
-      )
-      .map(vr => {
-        const votes = vr.request.votes.entriesArray().map(e => e[1]);
-
-        return {
-          contractId: vr.request.trackingCid,
-          actionName:
-            actionTagToTitle(amuletName)[getAction(vr.request.action) as SupportedActionTag],
-          description: vr.request.reason.body,
-          votingThresholdDeadline: dayjs(vr.request.voteBefore).format(dateTimeFormatISO),
-          voteTakesEffect:
-            (vr.outcome.tag === 'VRO_Accepted' &&
-              dayjs(vr.outcome.value.effectiveAt).format(dateTimeFormatISO)) ||
-            dayjs(vr.completedAt).format(dateTimeFormatISO),
-          yourVote: computeYourVote(votes, svPartyId),
-          status: getVoteResultStatus(vr.outcome),
-          voteStats: computeVoteStats(votes),
-          acceptanceThreshold: votingThreshold,
-        } as ProposalListingData;
-      });
+    return buildVoteHistoryData(allVoteResults, amuletName, svPartyId, votingThreshold);
   }, [voteResultsInfiniteQuery.data?.pages, amuletName, svPartyId, votingThreshold]);
+
+  const searchMayBeIncomplete = hasSearch && voteResultsInfiniteQuery.hasNextPage;
+
+  const voteRequests = listVoteRequestsQuery.data;
+  const currentSvName = getCurrentSvName(svPartyId, svs);
+
+  const actionRequiredRequests = useMemo(() => {
+    if (!voteRequests) {
+      return [];
+    }
+
+    return filterActionRequiredData(
+      voteRequests
+        .filter(v => !alreadyVotedRequestIds.has(v.payload.trackingCid || v.contractId))
+        .map(vr => ({
+          contractId: vr.payload.trackingCid || vr.contractId,
+          actionName:
+            actionTagToTitle(amuletName)[getAction(vr.payload.action) as SupportedActionTag],
+          description: vr.payload.reason.body,
+          votingCloses: dayjs(vr.payload.voteBefore).format(dateTimeFormatISO),
+          createdAt: dayjs(vr.createdAt).format(dateTimeFormatISO),
+          requester: vr.payload.requester,
+          isYou: currentSvName !== undefined && vr.payload.requester === currentSvName,
+          effectiveAt: vr.payload.targetEffectiveAt
+            ? dayjs(vr.payload.targetEffectiveAt).format(dateTimeFormatISO)
+            : 'Threshold',
+        })) as ActionRequiredData[],
+      searchQuery
+    );
+  }, [voteRequests, alreadyVotedRequestIds, amuletName, currentSvName, searchQuery]);
+
+  const inflightRequests = useMemo(() => {
+    if (!voteRequests || votingThreshold === undefined) {
+      return [];
+    }
+
+    return filterProposalListingData(
+      voteRequests
+        .filter(v => alreadyVotedRequestIds.has(v.payload.trackingCid || v.contractId))
+        .map(v => {
+          const effectiveAt = v.payload.targetEffectiveAt
+            ? dayjs(v.payload.targetEffectiveAt).format(dateTimeFormatISO)
+            : 'Threshold';
+          const votes = v.payload.votes.entriesArray().map(e => e[1]);
+
+          return {
+            contractId: v.payload.trackingCid || v.contractId,
+            actionName:
+              actionTagToTitle(amuletName)[getAction(v.payload.action) as SupportedActionTag],
+            description: v.payload.reason.body,
+            votingThresholdDeadline: dayjs(v.payload.voteBefore).format(dateTimeFormatISO),
+            voteTakesEffect: effectiveAt,
+            yourVote: computeYourVote(votes, svPartyId),
+            status: 'In Progress',
+            voteStats: computeVoteStats(votes),
+            acceptanceThreshold: votingThreshold,
+          } as ProposalListingData;
+        }),
+      searchQuery,
+      requestByContractId
+    );
+  }, [
+    voteRequests,
+    votingThreshold,
+    alreadyVotedRequestIds,
+    amuletName,
+    svPartyId,
+    searchQuery,
+    requestByContractId,
+  ]);
+
+  const filteredVoteHistory = useMemo(
+    () => filterProposalListingData(voteHistory, searchQuery, voteHistoryRequestByContractId),
+    [voteHistory, searchQuery, voteHistoryRequestByContractId]
+  );
 
   if (
     dsoInfosQuery.isPending ||
@@ -116,44 +198,18 @@ export const Governance: React.FC = () => {
     return <ErrorStateSection />;
   }
 
-  const voteRequests = listVoteRequestsQuery.data;
+  const showEmptyState =
+    !hasSearch &&
+    actionRequiredRequests.length === 0 &&
+    inflightRequests.length === 0 &&
+    filteredVoteHistory.length === 0 &&
+    !voteResultsInfiniteQuery.hasNextPage;
 
-  const actionRequiredRequests = voteRequests
-    .filter(v => !alreadyVotedRequestIds.has(v.payload.trackingCid || v.contractId))
-    .map(vr => {
-      return {
-        contractId: vr.payload.trackingCid || vr.contractId,
-        actionName:
-          actionTagToTitle(amuletName)[getAction(vr.payload.action) as SupportedActionTag],
-        description: vr.payload.reason.body,
-        votingCloses: dayjs(vr.payload.voteBefore).format(dateTimeFormatISO),
-        createdAt: dayjs(vr.createdAt).format(dateTimeFormatISO),
-        requester: vr.payload.requester,
-        isYou: vr.payload.requester === svPartyId,
-      } as ActionRequiredData;
-    });
-
-  const inflightRequests = voteRequests
-    .filter(v => alreadyVotedRequestIds.has(v.payload.trackingCid || v.contractId))
-    .map(v => {
-      const effectiveAt = v.payload.targetEffectiveAt
-        ? dayjs(v.payload.targetEffectiveAt).format(dateTimeFormatISO)
-        : 'Threshold';
-
-      const votes = v.payload.votes.entriesArray().map(e => e[1]);
-
-      return {
-        contractId: v.payload.trackingCid || v.contractId,
-        actionName: actionTagToTitle(amuletName)[getAction(v.payload.action) as SupportedActionTag],
-        description: v.payload.reason.body,
-        votingThresholdDeadline: dayjs(v.payload.voteBefore).format(dateTimeFormatISO),
-        voteTakesEffect: effectiveAt,
-        yourVote: computeYourVote(votes, svPartyId),
-        status: 'In Progress',
-        voteStats: computeVoteStats(votes),
-        acceptanceThreshold: dsoInfosQuery.data.votingThreshold,
-      } as ProposalListingData;
-    });
+  const showNoSearchMatches =
+    hasSearch &&
+    actionRequiredRequests.length === 0 &&
+    inflightRequests.length === 0 &&
+    filteredVoteHistory.length === 0;
 
   return (
     <Box sx={{ p: 4 }}>
@@ -172,20 +228,38 @@ export const Governance: React.FC = () => {
         data-testid="governance-page-header"
       />
 
-      {actionRequiredRequests.length === 0 &&
-      inflightRequests.length === 0 &&
-      voteHistory.length === 0 &&
-      !voteResultsInfiniteQuery.hasNextPage ? (
+      <ProposalSearch onSearchChange={setSearchQuery} />
+
+      {searchMayBeIncomplete && (
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, textAlign: 'center' }}>
+          Results may be incomplete for very large histories.
+        </Typography>
+      )}
+
+      {showEmptyState ? (
         <EmptyStateSection />
+      ) : showNoSearchMatches ? (
+        <NoSearchMatchesSection />
       ) : (
         <>
-          <ActionRequiredSection actionRequiredRequests={actionRequiredRequests} />
+          <ActionRequiredSection
+            actionRequiredRequests={actionRequiredRequests}
+            noDataMessage={
+              hasSearch
+                ? 'No action required items match your search.'
+                : 'No Action Required items available'
+            }
+          />
 
           <ProposalListingSection
             sectionTitle="Inflight Votes"
             badgeCount={inflightRequests.length}
             data={inflightRequests}
-            noDataMessage="No proposals are currently in flight. Proposals you have voted on will appear here while awaiting the voting threshold or deadline."
+            noDataMessage={
+              hasSearch
+                ? 'No in-flight proposals match your search.'
+                : 'No proposals are currently in flight. Proposals you have voted on will appear here while awaiting the voting threshold or deadline.'
+            }
             uniqueId="inflight-proposals"
             showVoteStats
             showThresholdDeadline
@@ -194,17 +268,23 @@ export const Governance: React.FC = () => {
 
           <ProposalListingSection
             sectionTitle="Vote History"
-            badgeCount={voteResultsCountQuery.data}
-            data={voteHistory}
-            noDataMessage="No data to show. You can see your vote history here after proposals meet their threshold deadline."
+            badgeCount={hasSearch ? filteredVoteHistory.length : voteResultsCountQuery.data}
+            data={filteredVoteHistory}
+            noDataMessage={
+              hasSearch
+                ? 'No vote history matches your search.'
+                : 'No data to show. You can see your vote history here after proposals meet their threshold deadline.'
+            }
             uniqueId="vote-history"
             showStatus
             showVoteStats
-            fetchNextPage={voteResultsInfiniteQuery.fetchNextPage}
-            hasNextPage={voteResultsInfiniteQuery.hasNextPage}
-            isFetchingNextPage={voteResultsInfiniteQuery.isFetchingNextPage}
+            fetchNextPage={hasSearch ? undefined : voteResultsInfiniteQuery.fetchNextPage}
+            hasNextPage={hasSearch ? false : voteResultsInfiniteQuery.hasNextPage}
+            isFetchingNextPage={hasSearch ? false : voteResultsInfiniteQuery.isFetchingNextPage}
             pageCount={
-              voteResultsInfiniteQuery.data?.pages.filter(p => p.results.length > 0).length
+              hasSearch
+                ? undefined
+                : voteResultsInfiniteQuery.data?.pages.filter(p => p.results.length > 0).length
             }
           />
         </>
@@ -221,6 +301,15 @@ const EmptyStateSection: React.FC = () => (
     </Typography>
     <Typography fontSize={16}>
       This page will automatically update once there are in-flight proposals
+    </Typography>
+  </Stack>
+);
+
+const NoSearchMatchesSection: React.FC = () => (
+  <Stack mt={11} alignItems="center" gap="14px">
+    <InfoOutlined color="secondary" fontSize="large" />
+    <Typography fontSize={20} fontWeight="bold" mt={1}>
+      No proposals match your search
     </Typography>
   </Stack>
 );

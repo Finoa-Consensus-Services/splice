@@ -1,6 +1,6 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 import { SvConfigProvider } from '../../utils';
 import userEvent from '@testing-library/user-event';
@@ -215,5 +215,71 @@ describe('Governance Page', () => {
     expect(screen.getByTestId('your-vote-reason-input')).toBeInTheDocument();
     expect(screen.getByTestId('your-vote-accept')).toBeInTheDocument();
     expect(screen.getByTestId('your-vote-reject')).toBeInTheDocument();
+  });
+
+  describe('Proposal Search', () => {
+    test('renders unified search field on Governance page', async () => {
+      const user = userEvent.setup();
+      await login(user);
+      await navigateToGovernancePage(user);
+
+      expect(screen.getByTestId('proposal-search')).toBeInTheDocument();
+      expect(screen.getByTestId('proposal-search-input')).toBeInTheDocument();
+      expect(screen.getByTestId('proposal-search-submit')).toBeInTheDocument();
+    });
+
+    test('filters sections while typing without pressing enter', async () => {
+      const user = userEvent.setup();
+      await login(user);
+      await navigateToGovernancePage(user);
+
+      expect(screen.getByTestId('action-required-section')).toBeInTheDocument();
+      expect(screen.getByTestId('inflight-proposals-section')).toBeInTheDocument();
+      expect(screen.getByTestId('vote-history-section')).toBeInTheDocument();
+
+      await user.type(screen.getByTestId('proposal-search-input'), 'Digital-Asset');
+
+      await waitFor(() => {
+        expect(screen.getByTestId('proposal-search-clear')).toBeInTheDocument();
+      });
+      expect(screen.getByTestId('action-required-section')).toBeInTheDocument();
+      expect(screen.getByTestId('inflight-proposals-section')).toBeInTheDocument();
+      expect(screen.getByTestId('vote-history-section')).toBeInTheDocument();
+      expect(screen.queryByTestId('search-results-section')).not.toBeInTheDocument();
+    });
+
+    test('clear search restores default governance sections', async () => {
+      const user = userEvent.setup();
+      await login(user);
+      await navigateToGovernancePage(user);
+
+      await user.type(screen.getByTestId('proposal-search-input'), 'Digital-Asset');
+
+      await waitFor(() => {
+        expect(screen.getByTestId('proposal-search-clear')).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByTestId('proposal-search-clear'));
+
+      await waitFor(() => {
+        expect(screen.queryByTestId('proposal-search-clear')).not.toBeInTheDocument();
+      });
+      expect(screen.getByTestId('action-required-section')).toBeInTheDocument();
+    });
+
+    test('contract ID search navigates to proposal details on enter', async () => {
+      const user = userEvent.setup();
+      await login(user);
+      await navigateToGovernancePage(user);
+
+      const contractId =
+        '10f1a2cbcd5a2dc9ad2fb9d17fec183d75de19ca91f623cbd2eaaf634e8d7cb4b5ca101220b5c5c20442f608e151ca702e0c4f51341a338c5979c0547dfcc80f911061ca91';
+
+      const input = screen.getByTestId('proposal-search-input');
+      fireEvent.change(input, { target: { value: contractId } });
+      fireEvent.keyDown(input, { key: 'Enter' });
+
+      expect(await screen.findByTestId('proposal-details-title')).toBeInTheDocument();
+    });
   });
 });

@@ -1,11 +1,11 @@
 // Copyright (c) 2024 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import { List } from '@daml/types';
 import {
   DsoRules_CloseVoteRequestResult,
   VoteRequest,
 } from '@daml.js/splice-dso-governance/lib/Splice/DsoRules/module';
+import { List } from '@daml/types';
 import { Contract } from '@canton-network/splice-common-frontend-utils';
 import { type UseQueryResult, useQuery } from '@tanstack/react-query';
 
@@ -19,6 +19,11 @@ export type ListVoteRequestResultParams = {
   effectiveFrom?: string;
   effectiveTo?: string;
 };
+
+export interface UseListVoteRequestResultOptions {
+  limit?: number;
+  retry?: boolean;
+}
 
 export const useListDsoRulesVoteRequests = (
   refetchInterval?: number
@@ -38,8 +43,7 @@ export const useListDsoRulesVoteRequests = (
 
 export const useListVoteRequestResult = (
   query: ListVoteRequestResultParams,
-  limit: number = 10,
-  retry: boolean = true
+  { limit = 10, retry = true }: UseListVoteRequestResultOptions = {}
 ): UseQueryResult<DsoRules_CloseVoteRequestResult[]> => {
   const { listVoteRequestResults } = useSvAdminClient();
   return useQuery({

@@ -20,16 +20,21 @@ export interface ActionRequiredData {
   createdAt: string;
   requester: string;
   isYou?: boolean;
+  /** Target effective date, or `'Threshold'` when no explicit date was set. Used for search matching only. */
+  effectiveAt?: string;
 }
 
 export interface ActionRequiredProps {
   actionRequiredRequests: ActionRequiredData[];
+  noDataMessage?: string;
 }
+
+const DEFAULT_NO_DATA_MESSAGE = 'No Action Required items available';
 
 export const ActionRequiredSection: React.FC<ActionRequiredProps> = (
   props: ActionRequiredProps
 ) => {
-  const { actionRequiredRequests } = props;
+  const { actionRequiredRequests, noDataMessage = DEFAULT_NO_DATA_MESSAGE } = props;
 
   // Sort by voting closes date ascending (closest deadline first)
   const sortedRequests = actionRequiredRequests.toSorted((a, b) =>
@@ -48,7 +53,7 @@ export const ActionRequiredSection: React.FC<ActionRequiredProps> = (
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 3 }}>
         {sortedRequests.length === 0 ? (
           <Alert severity="info" data-testid={'action-required-section-no-items'}>
-            No Action Required items available
+            {noDataMessage}
           </Alert>
         ) : (
           sortedRequests.map((ar, index) => (
