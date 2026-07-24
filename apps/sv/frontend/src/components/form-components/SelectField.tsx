@@ -53,7 +53,6 @@ export const SelectField: React.FC<SelectFieldProps> = props => {
           IconComponent={KeyboardArrowDown}
           value={field.state.value}
           displayEmpty
-          sx={scrollableIdentifier ? scrollableSelectFieldSx : undefined}
           renderValue={selected => {
             if (!selected) {
               return showPlaceholder ? (
@@ -74,7 +73,14 @@ export const SelectField: React.FC<SelectFieldProps> = props => {
           disabled={disabled}
           id={`${id}-dropdown`}
           data-testid={id}
-          sx={selectFieldSx}
+          sx={
+            scrollableIdentifier
+              ? theme => ({
+                  ...(typeof selectFieldSx === 'function' ? selectFieldSx(theme) : selectFieldSx),
+                  ...scrollableSelectFieldSx,
+                })
+              : selectFieldSx
+          }
           inputProps={{
             'data-testid': `${id}-dropdown`,
             onChange: (e: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {

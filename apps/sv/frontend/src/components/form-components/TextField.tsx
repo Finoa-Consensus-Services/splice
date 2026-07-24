@@ -47,7 +47,6 @@ export const TextField: React.FC<TextFieldProps> = props => {
         fullWidth
         variant="outlined"
         autoComplete="off"
-        sx={singleLineFieldSx}
         value={field.state.value}
         onBlur={() => {
           field.handleBlur();
@@ -70,7 +69,16 @@ export const TextField: React.FC<TextFieldProps> = props => {
         }}
         inputProps={{ 'data-testid': id }}
         id={id}
-        sx={scrollableIdentifier ? scrollableTextFieldSx : undefined}
+        sx={
+          scrollableIdentifier
+            ? theme => ({
+                ...(typeof singleLineFieldSx === 'function'
+                  ? singleLineFieldSx(theme)
+                  : singleLineFieldSx),
+                ...scrollableTextFieldSx,
+              })
+            : singleLineFieldSx
+        }
         {...muiTextFieldProps}
       />
       {subtitle && (
