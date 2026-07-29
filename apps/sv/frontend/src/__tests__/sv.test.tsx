@@ -41,14 +41,6 @@ describe('SV user can', () => {
     expect(await screen.findAllByDisplayValue(svPartyId)).toBeDefined();
   });
 
-  test('can see the network name banner', async () => {
-    userEvent.setup();
-    render(<AppWithConfig />);
-
-    const dsoPartyId = dsoInfo.dso_party_id.replace(/^DSO::/, '');
-    await screen.findByText(`ScratchNet · ID: ${dsoPartyId}`);
-  });
-
   test('browse to the validator onboarding tab', async () => {
     const user = userEvent.setup();
     render(<AppWithConfig />);

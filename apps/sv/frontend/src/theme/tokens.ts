@@ -9,9 +9,6 @@ export const layoutTokens = {
   navBackground: '#272727',
   /** Figma Dev Mode --Light-text — brand wordmark and nav labels */
   lightText: '#E2E2E2',
-  /** Figma banner-testnet — bg-cyan-100 (styled export uses #C8F1FE) */
-  bannerTestnet: '#cffafe',
-  bannerText: '#18181b',
   /** Figma red00 — Governance count badge */
   notificationBadge: '#FD8575',
   /** Figma Purple (Navigation) — active nav pill border */
@@ -31,11 +28,14 @@ export const NAV_PILL_PX = '10px';
 /** Figma content max width (nav row is full width; content uses this) */
 export const CONTENT_MAX_WIDTH = 1583;
 
+/**
+ * Temporary top padding while NetworkBanner is omitted (matches old 50px banner height).
+ * Remove when the banner is restored (e.g. with #6087).
+ */
+export const HEADER_PT = '50px';
+
 /** Figma Dev Mode — 64px space below nav row, present on every page */
 export const HEADER_PB = 8;
-
-/** Figma Dev Mode — 30px gap between banner and nav row (Navigation component) */
-export const BANNER_HEADER_GAP = 3.75;
 
 /** Figma Dev Mode — fixed 145px gap between brand wordmark and nav cluster. */
 export const NAV_BRAND_GAP = '145px';
@@ -45,9 +45,6 @@ export const NAV_GAP = '60px';
 
 /** Figma Dev Mode — nav row height 44px */
 export const NAV_ROW_MIN_HEIGHT = 44;
-
-/** Figma Dev Mode — banner height 50px */
-export const BANNER_MIN_HEIGHT = 50;
 
 /**
  * Figma Dev Mode — Inter nav/logout typography (letter spacing: 0px, 140% line-height).

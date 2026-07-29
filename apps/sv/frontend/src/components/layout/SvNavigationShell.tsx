@@ -4,44 +4,34 @@ import * as React from 'react';
 
 import { Box } from '@mui/material';
 
-import { BANNER_HEADER_GAP, HEADER_PB, layoutTokens, PAGE_PX } from '../../theme/tokens';
-import NetworkBanner from './NetworkBanner';
+import { HEADER_PB, HEADER_PT, layoutTokens, PAGE_PX } from '../../theme/tokens';
 import SvTopNav from './SvTopNav';
 import { SvNavLinkItem } from './SvNavLink';
 
 interface SvNavigationShellProps {
-  networkName: string;
-  dsoPartyId: string;
   navLinks: SvNavLinkItem[];
   onLogout: () => void;
   pageName: string;
 }
 
 /**
- * Figma "Navigation" component — banner + nav row.
- * Dev Mode: vertical flow, gap 30px, padding-bottom 64px, background #272727.
+ * Figma "Navigation" component — nav row (network banner to be restored later).
+ * Dev Mode: padding-bottom 64px, background #272727.
+ * `HEADER_PT` is temporary breathing room until the banner returns.
  */
-const SvNavigationShell: React.FC<SvNavigationShellProps> = ({
-  networkName,
-  dsoPartyId,
-  navLinks,
-  onLogout,
-  pageName,
-}) => (
+const SvNavigationShell: React.FC<SvNavigationShellProps> = ({ navLinks, onLogout, pageName }) => (
   <Box
     data-component="navigation"
-    data-net={networkName}
     data-page={pageName}
     sx={{
       display: 'flex',
       flexDirection: 'column',
-      gap: BANNER_HEADER_GAP,
+      pt: HEADER_PT,
       pb: HEADER_PB,
       bgcolor: layoutTokens.navBackground,
       width: '100%',
     }}
   >
-    <NetworkBanner networkName={networkName} dsoPartyId={dsoPartyId} />
     <Box sx={{ px: PAGE_PX, width: '100%' }}>
       <SvTopNav navLinks={navLinks} onLogout={onLogout} />
     </Box>

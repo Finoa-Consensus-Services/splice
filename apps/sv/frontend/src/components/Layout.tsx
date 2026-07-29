@@ -11,7 +11,6 @@ import PartyIdScrollTracks from './PartyIdScrollTracks';
 import SvNavigationShell from './layout/SvNavigationShell';
 import { SvNavLinkItem } from './layout/SvNavLink';
 import { useFeatureSupport } from '../contexts/SvContext';
-import { useNetworkInstanceName } from '../hooks/index';
 import { CONTENT_MAX_WIDTH, layoutTokens, PAGE_PX } from '../theme/tokens';
 import { useSvConfig } from '../utils';
 
@@ -29,9 +28,6 @@ const pathnameToPageName = (pathname: string, amuletName: string): string => {
   if (pathname.startsWith('/amulet-price')) {
     return `${amuletName} Price`;
   }
-  if (pathname.startsWith('/delegate-election')) {
-    return 'Delegate Election';
-  }
   return 'Global Synchronizer Information';
 };
 
@@ -47,14 +43,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const config = useSvConfig();
   const { logout } = useUserState();
   const location = useLocation();
-  const networkInstanceName = useNetworkInstanceName();
   const featureSupport = useFeatureSupport();
 
   const votesHooks = useVotesHooks();
   const dsoInfosQuery = votesHooks.useDsoInfos();
   const listVoteRequestsQuery = votesHooks.useListDsoRulesVoteRequests();
   const svPartyId = dsoInfosQuery.data?.svPartyId;
-  const dsoPartyId = dsoInfosQuery.data?.dsoPartyId;
   const actionsPending = listVoteRequestsQuery.data?.filter(
     vr => vr.payload.votes.entriesArray().find(e => e[1].sv === svPartyId) === undefined
   );
@@ -73,31 +67,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     },
     { name: `${config.spliceInstanceNames.amuletName} Price`, path: '/amulet-price' },
     { name: 'Validators', path: '/validator-onboarding' },
-    /**
-     * Figma shows this alert icon on every page mockup (verified across all Delegate
-     * Election, Governance, and Validators frames) — it isn't conditional on any known
-     * backend signal today, so default it on. Wire to a real "pending ranking" signal
-     * once the Delegate Election API exposes one.
-     */
-    { name: 'Delegate Election', path: '/delegate-election', hasAlert: true },
   ];
 
   const pageName = pathnameToPageName(location.pathname, config.spliceInstanceNames.amuletName);
-  const networkName = networkInstanceName ?? config.spliceInstanceNames.networkName;
 
   return (
     <Box bgcolor={layoutTokens.page} display="flex" flexDirection="column" minHeight="100vh">
       <GlobalStyles styles={partyIdScrollGlobalStyles} />
       <PartyIdScrollTracks />
-      {dsoPartyId !== undefined ? (
-        <SvNavigationShell
-          networkName={networkName}
-          dsoPartyId={dsoPartyId}
-          navLinks={navLinks}
-          onLogout={logout}
-          pageName={pageName}
-        />
-      ) : null}
+      <SvNavigationShell navLinks={navLinks} onLogout={logout} pageName={pageName} />
 
       <Box sx={{ flex: 1, pb: 3 }}>
         <Container maxWidth={false} sx={contentShellSx}>
