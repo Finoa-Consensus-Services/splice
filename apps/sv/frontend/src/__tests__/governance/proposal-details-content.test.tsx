@@ -24,12 +24,7 @@ import { ProposalVoteForm } from '../../components/governance/ProposalVoteForm';
 import App from '../../App';
 import { svPartyId } from '../mocks/constants';
 import { Wrapper } from '../helpers';
-import {
-  PROPOSAL_LINK_LABEL,
-  SUPPORTING_URL_LABEL,
-  VOTE_PROPOSAL_CONTRACT_ID_LABEL,
-} from '../../utils/constants';
-import { getProposalLink } from '../../utils/governance';
+import { SUPPORTING_URL_LABEL, VOTE_PROPOSAL_CONTRACT_ID_LABEL } from '../../utils/constants';
 
 const voteRequest = {
   contractId: 'abc123' as ContractId<VoteRequest>,
@@ -191,12 +186,6 @@ describe('Proposal Details Content', () => {
 
     const url = screen.getByTestId('proposal-details-url');
     expect(url.textContent).toMatch(/https:\/\/example.com/);
-
-    expect(screen.getByTestId('proposal-details-proposal-link-label').textContent).toBe(
-      PROPOSAL_LINK_LABEL
-    );
-    const proposalLink = screen.getByTestId('proposal-details-proposal-link-link');
-    expect(proposalLink).toHaveAttribute('href', getProposalLink(voteRequest.contractId));
 
     const votingInformationSection = screen.getByTestId('proposal-details-voting-information');
     expect(votingInformationSection).toBeInTheDocument();

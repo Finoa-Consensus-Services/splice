@@ -36,13 +36,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useSvAdminClient } from '../../contexts/SvAdminServiceContext';
 import {
   DEFAULT_APP_ACTIVITY_WEIGHT,
-  PROPOSAL_LINK_LABEL,
   SUPPORTING_URL_LABEL,
   VOTE_PROPOSAL_CONTRACT_ID_LABEL,
   VOTE_REASON_SUMMARY_LABEL,
   VOTE_REASON_URL_LABEL,
 } from '../../utils/constants';
-import { getProposalLink } from '../../utils/governance';
 
 dayjs.extend(relativeTime);
 
@@ -319,18 +317,6 @@ export const ProposalDetailsContent: React.FC<ProposalDetailsContentProps> = pro
               />
             }
             labelId="proposal-details-url-label"
-          />
-
-          <DetailItem
-            label={PROPOSAL_LINK_LABEL}
-            value={
-              <CopyableUrl
-                url={getProposalLink(contractId)}
-                size="large"
-                data-testid="proposal-details-proposal-link"
-              />
-            }
-            labelId="proposal-details-proposal-link-label"
           />
         </VoteSection>
 
