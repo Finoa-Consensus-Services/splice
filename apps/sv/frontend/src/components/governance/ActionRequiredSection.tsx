@@ -207,7 +207,7 @@ const ActionCardSegment: React.FC<ActionCardSegmentProps> = ({
       lineHeight="22px"
       fontWeight={600}
       variant="subtitle2"
-      color="#E2E2E2"
+      color="colors.neutral.80"
       data-testid={`${testId}-title`}
     >
       {title}

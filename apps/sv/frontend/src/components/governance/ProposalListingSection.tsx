@@ -78,7 +78,7 @@ const governanceTableHeadCellSx = {
   fontSize: 12,
   fontWeight: 600,
   textTransform: 'uppercase' as const,
-  color: '#E2E2E2',
+  color: 'colors.neutral.80',
   borderBottom: 'none',
   display: 'flex',
   alignItems: 'center',
