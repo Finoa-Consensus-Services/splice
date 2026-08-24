@@ -15,8 +15,10 @@ export const SUPPORTING_URL_LABEL = 'Supporting URL';
 export const SUPPORTING_URL_PLACEHOLDER = 'https://';
 export const VOTE_REASON_URL_LABEL = 'Vote Reason URL';
 export const VOTE_REASON_SUMMARY_LABEL = 'Reason';
-/** Figma Your Vote empty Reason prompt (`1013:1869`) — muted `#4F4F4F`. */
-export const VOTE_REASON_PLACEHOLDER = 'Your reason';
+/** Your Vote Reason empty prompt — aligned with #6910. */
+export const VOTE_REASON_PLACEHOLDER = 'Add your reasoning here';
+/** Your Vote URL empty prompt — aligned with #6910. */
+export const VOTE_REASON_URL_PLACEHOLDER = 'https://example.com';
 export const VOTE_PROPOSAL_CONTRACT_ID_LABEL = 'Vote proposal contract id';
 export const THRESHOLD_DEADLINE_LABEL = 'Quorum Threshold Deadline';
 export const EFFECTIVE_AT_LABEL = 'Effective At';
