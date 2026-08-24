@@ -16,15 +16,10 @@ cloudArmor:
         withinIntervalSeconds: 60
 cluster:
   nodePools:
-    additionalApps:
-      - maxNodes: 20
-        minNodes: 0
-        nodeType: 'n4-standard-16'
-        zones: '*'
     apps:
-      maxNodes: 20
+      maxNodes: 40
       minNodes: 0
-      nodeType: 'n4d-standard-16'
+      nodeType: 'c3d-standard-8'
       zones: '*'
     infra:
       maxNodes: 3
@@ -49,7 +44,7 @@ monitoring:
     alerts:
       acsCommitments:
         checkpointDelay:
-          seconds: 1200
+          seconds: 2400
         completedDelay:
           seconds: 3600
         computeDuration:
@@ -74,7 +69,7 @@ monitoring:
       deployment:
         pendingPeriodMinutes: 5
       dsoMissedConfirmations:
-        threshold: 0.01
+        threshold: 0
         windowMinutes: 10
       gcpQuotas:
         excludedApproachingMetrics: []
@@ -111,6 +106,10 @@ monitoring:
       sequencerRateLimits:
         circuitBreakerStateThreshold: 0.5
         rejectionRateThreshold: 0
+      spliceRateLimits:
+        excludedLimiters: []
+        rejectionCountThreshold: 10
+        usageThreshold: 0.8
       trafficBasedRewards:
         featuredAppRightsLimit: 10000
         verdictIngestionBatchSizePendingPeriodMinutes: 60
@@ -122,7 +121,7 @@ monitoring:
       walletSweep:
         tolerance: 1.5
     enableNoDataAlerts: false
-    loggedSecretsFilter: "(\n  (\n    jsonPayload.message=~\"(?i)(secret|token|(private|secret)(-)?key|password)=[^, ]+\" AND\n    -jsonPayload.message=~\"(?i)(secret|token|(private|secret)(-)?key|password)=(\\\"\\*\\*\\*\\*\\\"|hidden)\"\n  ) OR\n  jsonPayload.message=~\"eyJhbGc[A-Za-z0-9_-]{2,}\\.[A-Za-z0-9_-]{2,}\\.[A-Za-z0-9_-]{2,}\" OR\n  jsonPayload.message=~\"Bearer\\s+eyJ[A-Za-z0-9_-]{2,}\"\n)\n"
+    loggedSecretsFilter: "(\n  (\n    jsonPayload.message=~\"(?i)(secret|token|(private|secret)(-)?key|password)=[^, ]+\" AND\n    -jsonPayload.message=~\"(?i)(secret|token|(private|secret)(-)?key|password)=(\\\"\\*\\*\\*\\*\\\"|hidden)\" AND\n    -jsonPayload.message=~\"(?i)page(_|-)?token=[^, ]+\"\n  ) OR\n  jsonPayload.message=~\"eyJhbGc[A-Za-z0-9_-]{2,}\\.[A-Za-z0-9_-]{2,}\\.[A-Za-z0-9_-]{2,}\" OR\n  jsonPayload.message=~\"Bearer\\s+eyJ[A-Za-z0-9_-]{2,}\"\n)\n"
     muteTimeIntervals: []
   enableGrafanaServiceAccountToken: true
 multiValidator:
@@ -287,6 +286,9 @@ sv:
         /api/scan/v0/history/bulk/acs:
           name: 'listBulkAcsSnapshotObjects'
           type: 'unlimited'
+        /api/scan/v0/history/bulk/checksums:
+          name: 'getBulkHistoryChecksums'
+          type: 'unlimited'
         /api/scan/v0/history/bulk/updates:
           name: 'listBulkUpdateHistoryObjects'
           type: 'unlimited'
@@ -325,9 +327,6 @@ sv:
           type: 'unlimited'
         /api/scan/v0/synchronizer-identities:
           name: 'synchronizer-identities'
-          type: 'unlimited'
-        /api/scan/v0/transactions:
-          name: 'transactions'
           type: 'unlimited'
         /api/scan/v0/transfer-command:
           name: 'transfer-command-status'
@@ -373,123 +372,123 @@ sv:
           type: 'unlimited'
         /registry/allocation-instruction/v1/allocation-factory:
           fillInterval: '60s'
-          maxTokens: 200
+          maxTokens: 720
           name: 'registry-allocation-factory'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 30
-            tokensPerFill: 30
-          tokensPerFill: 200
+            maxTokens: 120
+            tokensPerFill: 120
+          tokensPerFill: 720
           type: 'limited'
         /registry/allocation-instruction/v2:
           fillInterval: '60s'
-          maxTokens: 200
+          maxTokens: 720
           name: 'registry-allocation-instruction-v2'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 30
-            tokensPerFill: 30
-          tokensPerFill: 200
+            maxTokens: 120
+            tokensPerFill: 120
+          tokensPerFill: 720
           type: 'limited'
         /registry/allocation-instruction/v2/allocation-factory:
           fillInterval: '60s'
-          maxTokens: 200
+          maxTokens: 720
           name: 'registry-allocation-factory-v2'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 30
-            tokensPerFill: 30
-          tokensPerFill: 200
+            maxTokens: 120
+            tokensPerFill: 120
+          tokensPerFill: 720
           type: 'limited'
         /registry/allocation/v2/settlement-factory:
           fillInterval: '60s'
-          maxTokens: 200
+          maxTokens: 720
           name: 'registry-settlement-factory-v2'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 30
-            tokensPerFill: 30
-          tokensPerFill: 200
+            maxTokens: 120
+            tokensPerFill: 120
+          tokensPerFill: 720
           type: 'limited'
         /registry/allocations/v1:
           fillInterval: '60s'
-          maxTokens: 200
+          maxTokens: 720
           name: 'registry-allocations'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 30
-            tokensPerFill: 30
-          tokensPerFill: 200
+            maxTokens: 120
+            tokensPerFill: 120
+          tokensPerFill: 720
           type: 'limited'
         /registry/allocations/v2:
           fillInterval: '60s'
-          maxTokens: 200
+          maxTokens: 720
           name: 'registry-allocations-v2'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 30
-            tokensPerFill: 30
-          tokensPerFill: 200
+            maxTokens: 120
+            tokensPerFill: 120
+          tokensPerFill: 720
           type: 'limited'
         /registry/metadata/v1/info:
           fillInterval: '60s'
-          maxTokens: 200
+          maxTokens: 720
           name: 'registry-metadata-info'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 30
-            tokensPerFill: 30
-          tokensPerFill: 200
+            maxTokens: 120
+            tokensPerFill: 120
+          tokensPerFill: 720
           type: 'limited'
         /registry/metadata/v1/instruments:
           fillInterval: '60s'
-          maxTokens: 200
+          maxTokens: 720
           name: 'registry-metadata-instruments'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 30
-            tokensPerFill: 30
-          tokensPerFill: 200
+            maxTokens: 120
+            tokensPerFill: 120
+          tokensPerFill: 720
           type: 'limited'
         /registry/transfer-instruction/v1:
           fillInterval: '60s'
-          maxTokens: 200
+          maxTokens: 720
           name: 'registry-transfer-instruction'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 30
-            tokensPerFill: 30
-          tokensPerFill: 200
+            maxTokens: 120
+            tokensPerFill: 120
+          tokensPerFill: 720
           type: 'limited'
         /registry/transfer-instruction/v1/transfer-factory:
           fillInterval: '60s'
-          maxTokens: 500
+          maxTokens: 1440
           name: 'registry-transfer-factory'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 50
-            tokensPerFill: 50
-          tokensPerFill: 500
+            maxTokens: 240
+            tokensPerFill: 240
+          tokensPerFill: 1440
           type: 'limited'
         /registry/transfer-instruction/v2:
           fillInterval: '60s'
-          maxTokens: 200
+          maxTokens: 720
           name: 'registry-transfer-instruction-v2'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 30
-            tokensPerFill: 30
-          tokensPerFill: 200
+            maxTokens: 120
+            tokensPerFill: 120
+          tokensPerFill: 720
           type: 'limited'
         /registry/transfer-instruction/v2/transfer-factory:
           fillInterval: '60s'
-          maxTokens: 500
+          maxTokens: 720
           name: 'registry-transfer-factory-v2'
           perIpLimits:
             fillInterval: '60s'
-            maxTokens: 50
-            tokensPerFill: 50
-          tokensPerFill: 500
+            maxTokens: 120
+            tokensPerFill: 120
+          tokensPerFill: 720
           type: 'limited'
 svs:
   sv:
@@ -542,6 +541,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -616,6 +616,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -690,6 +691,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -764,6 +766,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -838,6 +841,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -912,6 +916,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -986,6 +991,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1060,6 +1066,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1134,6 +1141,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1208,6 +1216,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1282,6 +1291,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1356,6 +1366,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1430,6 +1441,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1504,6 +1516,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1578,6 +1591,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1652,6 +1666,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1726,6 +1741,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1803,6 +1819,7 @@ svs:
           cpu: '2'
           memory: '2Gi'
     sequencer:
+      enableAntiAffinity: false
       resources:
         limits:
           cpu: '3'
@@ -1847,6 +1864,7 @@ synchronizerMigration:
       spliceRoot: 'splice'
     version: 'local'
   frozenMigrationId: 0
+  splitSvDeploymentEnabled: true
 validator1:
   deduplicationDuration: '30m'
   logging:

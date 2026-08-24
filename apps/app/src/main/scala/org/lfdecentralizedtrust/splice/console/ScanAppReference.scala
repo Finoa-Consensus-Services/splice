@@ -368,20 +368,6 @@ abstract class ScanAppReference(
       httpCommand(HttpScanAppClient.GetRewardAccountingBatch(roundNumber, batchHash))
     }
 
-  import org.lfdecentralizedtrust.splice.http.v0.definitions.TransactionHistoryResponseItem
-  import org.lfdecentralizedtrust.splice.http.v0.definitions.TransactionHistoryRequest.SortOrder
-
-  def listTransactions(
-      pageEndEventId: Option[String],
-      sortOrder: SortOrder,
-      pageSize: Int,
-  ): Seq[TransactionHistoryResponseItem] =
-    consoleEnvironment.run {
-      httpCommand(
-        HttpScanAppClient.ListTransactions(pageEndEventId, sortOrder, pageSize)
-      )
-    }
-
   def getAcsSnapshot(party: PartyId, recordTime: Option[Instant]): ByteString =
     consoleEnvironment.run {
       httpCommand(
@@ -905,6 +891,18 @@ abstract class ScanAppReference(
           nextPageToken,
           limit,
         )
+      )
+    }
+
+  @Help.Summary(
+    "Get checksums for a list of bulk storage objects (using both staging and committed objects)"
+  )
+  def getBulkObjectChecksums(
+      objectKeys: Seq[String]
+  ): definitions.GetBulkObjectChecksumsResponse =
+    consoleEnvironment.run {
+      httpCommand(
+        HttpScanAppClient.GetBulkObjectChecksums(objectKeys)
       )
     }
 

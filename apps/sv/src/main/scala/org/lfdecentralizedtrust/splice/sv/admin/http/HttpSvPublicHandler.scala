@@ -889,6 +889,7 @@ class HttpSvPublicHandler(
                     ),
                     deduplicationOffset = offset,
                   )
+                  .recoveringAcceptedDuplicates()
                   .yieldUnit()
               }
               .value

@@ -428,7 +428,7 @@ class SvDsoAutomationService(
     synchronizerNodeService.nodes.successor.foreach(registerTriggersForSynchronizers)
   }
 
-  def registerLsuTriggers() = {
+  def registerLsuTriggers(): Unit = {
     synchronizerNodeService.nodes.successor match {
       case Some(successorSynchronizerNode) =>
         registerTrigger(
@@ -593,6 +593,12 @@ class SvDsoAutomationService(
     )
     registerTrigger(
       new AmuletPriceMetricsTrigger(
+        triggerContext,
+        dsoStore,
+      )
+    )
+    registerTrigger(
+      new VoteRequestMetricsTrigger(
         triggerContext,
         dsoStore,
       )
@@ -765,6 +771,7 @@ object SvDsoAutomationService extends AutomationServiceCompanion {
       aTrigger[FollowAmuletConversionRateFeedTrigger],
       aTrigger[CopyVotesTrigger],
       aTrigger[AmuletPriceMetricsTrigger],
+      aTrigger[VoteRequestMetricsTrigger],
       aTrigger[RewardMetricsTrigger],
       aTrigger[CreateBootstrapExternalPartyConfigStateInstructionTrigger],
       aTrigger[LsuTrigger],

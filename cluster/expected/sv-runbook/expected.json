@@ -16,7 +16,7 @@
       }
     },
     "name": "cluster-ingress-default",
-    "provider": "urn:pulumi:test-stack::test-project::pulumi:providers:kubernetes::k8s-imgpull-cluster-ingress-default::undefined_id",
+    "provider": "urn:pulumi:test-stack::test-project::pulumi:providers:kubernetes::k8s-imgpull-cluster-ingress-default::04da6b54-80e4-46f7-96ec-b56ff0331ba9",
     "type": "kubernetes:core/v1:ServiceAccountPatch"
   },
   {
@@ -32,7 +32,7 @@
       "stringData": {
         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
         "value": {
-          ".dockerconfigjson": "{\"auths\":{\"digitalasset-canton-enterprise-docker.jfrog.io\":{\"auth\":\"YXJ0X3VzZXI6czNjcjN0\",\"username\":\"art_user\",\"password\":\"s3cr3t\"},\"us-central1-docker.pkg.dev\":{\"auth\":\"X2pzb25fa2V5OnsidHlwZSI6InNlcnZpY2VfYWNjb3VudCIsInByb2plY3RfaWQiOiJmYWtlLXByb2plY3QiLCJwcml2YXRlX2tleV9pZCI6ImZha2VfaWQiLCJwcml2YXRlX2tleSI6Ii0tLS0tQkVHSU4gUFJJVkFURSBLRVktLS0tLVxuZmFrZVxuLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLVxuIiwiY2xpZW50X2VtYWlsIjoiZmFrZUBmYWtlLXByb2plY3QuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGllbnRfaWQiOiJmYWtlLWNsaWVudC1pZCIsImF1dGhfdXJpIjoiaHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tL28vb2F1dGgyL2F1dGgiLCJ0b2tlbl91cmkiOiJodHRwczovL29hdXRoMi5nb29nbGVhcGlzLmNvbS90b2tlbiIsImF1dGhfcHJvdmlkZXJfeDUwOV9jZXJ0X3VybCI6Imh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL29hdXRoMi92MS9jZXJ0cyIsImNsaWVudF94NTA5X2NlcnRfdXJsIjoiaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vcm9ib3QvdjEvbWV0YWRhdGEveDUwOS9mYWtlJTQwZmFrZS1wcm9qZWN0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwidW5pdmVyc2VfZG9tYWluIjoiZ29vZ2xlYXBpcy5jb20ifQ==\",\"username\":\"_json_key\",\"password\":\"{\\\"type\\\":\\\"service_account\\\",\\\"project_id\\\":\\\"fake-project\\\",\\\"private_key_id\\\":\\\"fake_id\\\",\\\"private_key\\\":\\\"-----BEGIN PRIVATE KEY-----\\\\nfake\\\\n-----END PRIVATE KEY-----\\\\n\\\",\\\"client_email\\\":\\\"fake@fake-project.iam.gserviceaccount.com\\\",\\\"client_id\\\":\\\"fake-client-id\\\",\\\"auth_uri\\\":\\\"https://accounts.google.com/o/oauth2/auth\\\",\\\"token_uri\\\":\\\"https://oauth2.googleapis.com/token\\\",\\\"auth_provider_x509_cert_url\\\":\\\"https://www.googleapis.com/oauth2/v1/certs\\\",\\\"client_x509_cert_url\\\":\\\"https://www.googleapis.com/robot/v1/metadata/x509/fake%40fake-project.iam.gserviceaccount.com\\\",\\\"universe_domain\\\":\\\"googleapis.com\\\"}\"}}}"
+          ".dockerconfigjson": "{\"auths\":{\"us-central1-docker.pkg.dev\":{\"auth\":\"X2pzb25fa2V5OnsidHlwZSI6InNlcnZpY2VfYWNjb3VudCIsInByb2plY3RfaWQiOiJmYWtlLXByb2plY3QiLCJwcml2YXRlX2tleV9pZCI6ImZha2VfaWQiLCJwcml2YXRlX2tleSI6Ii0tLS0tQkVHSU4gUFJJVkFURSBLRVktLS0tLVxuZmFrZVxuLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLVxuIiwiY2xpZW50X2VtYWlsIjoiZmFrZUBmYWtlLXByb2plY3QuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGllbnRfaWQiOiJmYWtlLWNsaWVudC1pZCIsImF1dGhfdXJpIjoiaHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tL28vb2F1dGgyL2F1dGgiLCJ0b2tlbl91cmkiOiJodHRwczovL29hdXRoMi5nb29nbGVhcGlzLmNvbS90b2tlbiIsImF1dGhfcHJvdmlkZXJfeDUwOV9jZXJ0X3VybCI6Imh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL29hdXRoMi92MS9jZXJ0cyIsImNsaWVudF94NTA5X2NlcnRfdXJsIjoiaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vcm9ib3QvdjEvbWV0YWRhdGEveDUwOS9mYWtlJTQwZmFrZS1wcm9qZWN0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwidW5pdmVyc2VfZG9tYWluIjoiZ29vZ2xlYXBpcy5jb20ifQ==\",\"username\":\"_json_key\",\"password\":\"{\\\"type\\\":\\\"service_account\\\",\\\"project_id\\\":\\\"fake-project\\\",\\\"private_key_id\\\":\\\"fake_id\\\",\\\"private_key\\\":\\\"-----BEGIN PRIVATE KEY-----\\\\nfake\\\\n-----END PRIVATE KEY-----\\\\n\\\",\\\"client_email\\\":\\\"fake@fake-project.iam.gserviceaccount.com\\\",\\\"client_id\\\":\\\"fake-client-id\\\",\\\"auth_uri\\\":\\\"https://accounts.google.com/o/oauth2/auth\\\",\\\"token_uri\\\":\\\"https://oauth2.googleapis.com/token\\\",\\\"auth_provider_x509_cert_url\\\":\\\"https://www.googleapis.com/oauth2/v1/certs\\\",\\\"client_x509_cert_url\\\":\\\"https://www.googleapis.com/robot/v1/metadata/x509/fake%40fake-project.iam.gserviceaccount.com\\\",\\\"universe_domain\\\":\\\"googleapis.com\\\"}\"}}}"
         }
       },
       "type": "kubernetes.io/dockerconfigjson"
@@ -221,7 +221,7 @@
             },
             "approvedSvIdentities": {
               "type": "md5",
-              "value": "5871224b744b45122540483fddbd550f"
+              "value": "6c876b92df2d92fe7ba83e883d031386"
             }
           },
           "network": "test",
@@ -623,6 +623,12 @@
       "namespace": "sv",
       "timeout": 600,
       "values": {
+        "additionalEnvVars": [
+          {
+            "name": "ADDITIONAL_CONFIG_CLIENT_IP_HEADERS",
+            "value": "canton.scan-apps.scan-app.parameters.rate-limiting.client-ip-headers = [\"x-envoy-external-address\"]\n"
+          }
+        ],
         "affinity": {
           "nodeAffinity": {
             "requiredDuringSchedulingIgnoredDuringExecution": {
@@ -945,6 +951,10 @@
           "name": "listBulkAcsSnapshotObjects",
           "type": "unlimited"
         },
+        "/api/scan/v0/history/bulk/checksums": {
+          "name": "getBulkHistoryChecksums",
+          "type": "unlimited"
+        },
         "/api/scan/v0/history/bulk/updates": {
           "name": "listBulkUpdateHistoryObjects",
           "type": "unlimited"
@@ -995,10 +1005,6 @@
         },
         "/api/scan/v0/synchronizer-identities": {
           "name": "synchronizer-identities",
-          "type": "unlimited"
-        },
-        "/api/scan/v0/transactions": {
-          "name": "transactions",
           "type": "unlimited"
         },
         "/api/scan/v0/transfer-command": {
@@ -1059,146 +1065,156 @@
         },
         "/registry/allocation-instruction/v1/allocation-factory": {
           "fillInterval": "60s",
-          "maxTokens": 200,
+          "maxTokens": 720,
           "name": "registry-allocation-factory",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 30,
-            "tokensPerFill": 30
+            "maxTokens": 120,
+            "tokensPerFill": 120
           },
-          "tokensPerFill": 200,
+          "tokensPerFill": 720,
           "type": "limited"
         },
         "/registry/allocation-instruction/v2": {
           "fillInterval": "60s",
-          "maxTokens": 200,
+          "maxTokens": 720,
           "name": "registry-allocation-instruction-v2",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 30,
-            "tokensPerFill": 30
+            "maxTokens": 120,
+            "tokensPerFill": 120
           },
-          "tokensPerFill": 200,
+          "tokensPerFill": 720,
           "type": "limited"
         },
         "/registry/allocation-instruction/v2/allocation-factory": {
           "fillInterval": "60s",
-          "maxTokens": 200,
+          "maxTokens": 720,
           "name": "registry-allocation-factory-v2",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 30,
-            "tokensPerFill": 30
+            "maxTokens": 120,
+            "tokensPerFill": 120
           },
-          "tokensPerFill": 200,
+          "tokensPerFill": 720,
           "type": "limited"
         },
         "/registry/allocation/v2/settlement-factory": {
           "fillInterval": "60s",
-          "maxTokens": 200,
+          "maxTokens": 720,
           "name": "registry-settlement-factory-v2",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 30,
-            "tokensPerFill": 30
+            "maxTokens": 120,
+            "tokensPerFill": 120
           },
-          "tokensPerFill": 200,
+          "tokensPerFill": 720,
           "type": "limited"
         },
         "/registry/allocations/v1": {
           "fillInterval": "60s",
-          "maxTokens": 200,
+          "maxTokens": 720,
           "name": "registry-allocations",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 30,
-            "tokensPerFill": 30
+            "maxTokens": 120,
+            "tokensPerFill": 120
           },
-          "tokensPerFill": 200,
+          "tokensPerFill": 720,
           "type": "limited"
         },
         "/registry/allocations/v2": {
           "fillInterval": "60s",
-          "maxTokens": 200,
+          "maxTokens": 720,
           "name": "registry-allocations-v2",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 30,
-            "tokensPerFill": 30
+            "maxTokens": 120,
+            "tokensPerFill": 120
           },
-          "tokensPerFill": 200,
+          "tokensPerFill": 720,
           "type": "limited"
         },
         "/registry/metadata/v1/info": {
           "fillInterval": "60s",
-          "maxTokens": 200,
+          "maxTokens": 720,
           "name": "registry-metadata-info",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 30,
-            "tokensPerFill": 30
+            "maxTokens": 120,
+            "overrides": {
+              "test": {
+                "fillInterval": "60s",
+                "ips": [
+                  "192.68.78.50"
+                ],
+                "maxTokens": 250,
+                "tokensPerFill": 250
+              }
+            },
+            "tokensPerFill": 120
           },
-          "tokensPerFill": 200,
+          "tokensPerFill": 720,
           "type": "limited"
         },
         "/registry/metadata/v1/instruments": {
           "fillInterval": "60s",
-          "maxTokens": 200,
+          "maxTokens": 720,
           "name": "registry-metadata-instruments",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 30,
-            "tokensPerFill": 30
+            "maxTokens": 120,
+            "tokensPerFill": 120
           },
-          "tokensPerFill": 200,
+          "tokensPerFill": 720,
           "type": "limited"
         },
         "/registry/transfer-instruction/v1": {
           "fillInterval": "60s",
-          "maxTokens": 200,
+          "maxTokens": 720,
           "name": "registry-transfer-instruction",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 30,
-            "tokensPerFill": 30
+            "maxTokens": 120,
+            "tokensPerFill": 120
           },
-          "tokensPerFill": 200,
+          "tokensPerFill": 720,
           "type": "limited"
         },
         "/registry/transfer-instruction/v1/transfer-factory": {
           "fillInterval": "60s",
-          "maxTokens": 500,
+          "maxTokens": 1440,
           "name": "registry-transfer-factory",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 50,
-            "tokensPerFill": 50
+            "maxTokens": 240,
+            "tokensPerFill": 240
           },
-          "tokensPerFill": 500,
+          "tokensPerFill": 1440,
           "type": "limited"
         },
         "/registry/transfer-instruction/v2": {
           "fillInterval": "60s",
-          "maxTokens": 200,
+          "maxTokens": 720,
           "name": "registry-transfer-instruction-v2",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 30,
-            "tokensPerFill": 30
+            "maxTokens": 120,
+            "tokensPerFill": 120
           },
-          "tokensPerFill": 200,
+          "tokensPerFill": 720,
           "type": "limited"
         },
         "/registry/transfer-instruction/v2/transfer-factory": {
           "fillInterval": "60s",
-          "maxTokens": 500,
+          "maxTokens": 720,
           "name": "registry-transfer-factory-v2",
           "perIpLimits": {
             "fillInterval": "60s",
-            "maxTokens": 50,
-            "tokensPerFill": 50
+            "maxTokens": 120,
+            "tokensPerFill": 120
           },
-          "tokensPerFill": 500,
+          "tokensPerFill": 720,
           "type": "limited"
         }
       }
@@ -1313,6 +1329,7 @@
         "deletionProtectionEnabled": false,
         "edition": "ENTERPRISE",
         "insightsConfig": {
+          "enhancedQueryInsightsEnabled": false,
           "queryInsightsEnabled": true
         },
         "ipConfiguration": {
@@ -1368,6 +1385,10 @@
           {
             "name": "ADDITIONAL_CONFIG_ADDITIONAL_PACKAGES_TO_UNVET",
             "value": "canton.sv-apps.sv.additional-packages-to-unvet.\"splice-wallet-payments\" = [\"0.1.15\", \"0.1.16\"]\ncanton.sv-apps.sv.additional-packages-to-unvet.\"splice-amulet\" = [\"0.1.15\"]"
+          },
+          {
+            "name": "ADDITIONAL_CONFIG_CLIENT_IP_HEADERS",
+            "value": "canton.sv-apps.sv.parameters.rate-limiting.client-ip-headers = [\"x-envoy-external-address\"]\n"
           }
         ],
         "additionalJvmOptions": "-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -DcustomSvAppJvmFlag",
@@ -1407,16 +1428,6 @@
             "rewardWeightBps": 1000000
           },
           {
-            "extraBeneficiaries": [
-              {
-                "beneficiary": "mock-validator-1::123456789012345678901234567890123456789012234567890123456789012345678",
-                "weight": 100000
-              },
-              {
-                "beneficiary": "Broadridge-validator-1::1220c89a73e7b47f16dfb48a521eeedfe2a8620ea1b19b815ab427388d9f5427faa5",
-                "weight": 50000
-              }
-            ],
             "name": "SV2",
             "publicKey": "PUBLIC_KEY_2==",
             "rewardWeightBps": 150000
@@ -1587,7 +1598,7 @@
       }
     },
     "name": "sv-default",
-    "provider": "urn:pulumi:test-stack::test-project::pulumi:providers:kubernetes::k8s-imgpull-sv-default::undefined_id",
+    "provider": "urn:pulumi:test-stack::test-project::pulumi:providers:kubernetes::k8s-imgpull-sv-default::04da6b54-80e4-46f7-96ec-b56ff0331ba9",
     "type": "kubernetes:core/v1:ServiceAccountPatch"
   },
   {
@@ -1603,7 +1614,7 @@
       "stringData": {
         "4dabf18193072939515e22adb298388d": "1b47061264138c4ac30d75fd1eb44270",
         "value": {
-          ".dockerconfigjson": "{\"auths\":{\"digitalasset-canton-enterprise-docker.jfrog.io\":{\"auth\":\"YXJ0X3VzZXI6czNjcjN0\",\"username\":\"art_user\",\"password\":\"s3cr3t\"},\"us-central1-docker.pkg.dev\":{\"auth\":\"X2pzb25fa2V5OnsidHlwZSI6InNlcnZpY2VfYWNjb3VudCIsInByb2plY3RfaWQiOiJmYWtlLXByb2plY3QiLCJwcml2YXRlX2tleV9pZCI6ImZha2VfaWQiLCJwcml2YXRlX2tleSI6Ii0tLS0tQkVHSU4gUFJJVkFURSBLRVktLS0tLVxuZmFrZVxuLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLVxuIiwiY2xpZW50X2VtYWlsIjoiZmFrZUBmYWtlLXByb2plY3QuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGllbnRfaWQiOiJmYWtlLWNsaWVudC1pZCIsImF1dGhfdXJpIjoiaHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tL28vb2F1dGgyL2F1dGgiLCJ0b2tlbl91cmkiOiJodHRwczovL29hdXRoMi5nb29nbGVhcGlzLmNvbS90b2tlbiIsImF1dGhfcHJvdmlkZXJfeDUwOV9jZXJ0X3VybCI6Imh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL29hdXRoMi92MS9jZXJ0cyIsImNsaWVudF94NTA5X2NlcnRfdXJsIjoiaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vcm9ib3QvdjEvbWV0YWRhdGEveDUwOS9mYWtlJTQwZmFrZS1wcm9qZWN0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwidW5pdmVyc2VfZG9tYWluIjoiZ29vZ2xlYXBpcy5jb20ifQ==\",\"username\":\"_json_key\",\"password\":\"{\\\"type\\\":\\\"service_account\\\",\\\"project_id\\\":\\\"fake-project\\\",\\\"private_key_id\\\":\\\"fake_id\\\",\\\"private_key\\\":\\\"-----BEGIN PRIVATE KEY-----\\\\nfake\\\\n-----END PRIVATE KEY-----\\\\n\\\",\\\"client_email\\\":\\\"fake@fake-project.iam.gserviceaccount.com\\\",\\\"client_id\\\":\\\"fake-client-id\\\",\\\"auth_uri\\\":\\\"https://accounts.google.com/o/oauth2/auth\\\",\\\"token_uri\\\":\\\"https://oauth2.googleapis.com/token\\\",\\\"auth_provider_x509_cert_url\\\":\\\"https://www.googleapis.com/oauth2/v1/certs\\\",\\\"client_x509_cert_url\\\":\\\"https://www.googleapis.com/robot/v1/metadata/x509/fake%40fake-project.iam.gserviceaccount.com\\\",\\\"universe_domain\\\":\\\"googleapis.com\\\"}\"}}}"
+          ".dockerconfigjson": "{\"auths\":{\"us-central1-docker.pkg.dev\":{\"auth\":\"X2pzb25fa2V5OnsidHlwZSI6InNlcnZpY2VfYWNjb3VudCIsInByb2plY3RfaWQiOiJmYWtlLXByb2plY3QiLCJwcml2YXRlX2tleV9pZCI6ImZha2VfaWQiLCJwcml2YXRlX2tleSI6Ii0tLS0tQkVHSU4gUFJJVkFURSBLRVktLS0tLVxuZmFrZVxuLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLVxuIiwiY2xpZW50X2VtYWlsIjoiZmFrZUBmYWtlLXByb2plY3QuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGllbnRfaWQiOiJmYWtlLWNsaWVudC1pZCIsImF1dGhfdXJpIjoiaHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tL28vb2F1dGgyL2F1dGgiLCJ0b2tlbl91cmkiOiJodHRwczovL29hdXRoMi5nb29nbGVhcGlzLmNvbS90b2tlbiIsImF1dGhfcHJvdmlkZXJfeDUwOV9jZXJ0X3VybCI6Imh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL29hdXRoMi92MS9jZXJ0cyIsImNsaWVudF94NTA5X2NlcnRfdXJsIjoiaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vcm9ib3QvdjEvbWV0YWRhdGEveDUwOS9mYWtlJTQwZmFrZS1wcm9qZWN0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwidW5pdmVyc2VfZG9tYWluIjoiZ29vZ2xlYXBpcy5jb20ifQ==\",\"username\":\"_json_key\",\"password\":\"{\\\"type\\\":\\\"service_account\\\",\\\"project_id\\\":\\\"fake-project\\\",\\\"private_key_id\\\":\\\"fake_id\\\",\\\"private_key\\\":\\\"-----BEGIN PRIVATE KEY-----\\\\nfake\\\\n-----END PRIVATE KEY-----\\\\n\\\",\\\"client_email\\\":\\\"fake@fake-project.iam.gserviceaccount.com\\\",\\\"client_id\\\":\\\"fake-client-id\\\",\\\"auth_uri\\\":\\\"https://accounts.google.com/o/oauth2/auth\\\",\\\"token_uri\\\":\\\"https://oauth2.googleapis.com/token\\\",\\\"auth_provider_x509_cert_url\\\":\\\"https://www.googleapis.com/oauth2/v1/certs\\\",\\\"client_x509_cert_url\\\":\\\"https://www.googleapis.com/robot/v1/metadata/x509/fake%40fake-project.iam.gserviceaccount.com\\\",\\\"universe_domain\\\":\\\"googleapis.com\\\"}\"}}}"
         }
       },
       "type": "kubernetes.io/dockerconfigjson"
@@ -1616,12 +1627,43 @@
     "custom": true,
     "id": "",
     "inputs": {
+      "apiVersion": "telemetry.istio.io/v1",
+      "kind": "Telemetry",
+      "metadata": {
+        "name": "scan-app-rate-limit-access-log",
+        "namespace": "sv"
+      },
+      "spec": {
+        "accessLogging": [
+          {
+            "filter": {
+              "expression": "response.code == 429"
+            },
+            "providers": [
+              {
+                "name": "envoy"
+              }
+            ]
+          }
+        ],
+        "selector": {
+          "matchLabels": {
+            "app": "scan-app"
+          }
+        }
+      }
+    },
+    "name": "sv-scan-app-rate-limit-access-log",
+    "provider": "",
+    "type": "kubernetes:telemetry.istio.io/v1:Telemetry"
+  },
+  {
+    "custom": true,
+    "id": "",
+    "inputs": {
       "apiVersion": "networking.istio.io/v1alpha3",
       "kind": "EnvoyFilter",
       "metadata": {
-        "annotations": {
-          "proxy.istio.io/config": "proxyStatsMatcher:\n  inclusionRegexps:\n  - \".*http_local_rate_limit.*\""
-        },
         "name": "scan-app-rate-limit",
         "namespace": "sv"
       },
@@ -1708,9 +1750,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -1752,9 +1794,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -1796,9 +1838,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -1840,9 +1882,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -1884,9 +1926,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -1928,9 +1970,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -1972,9 +2014,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -2016,9 +2058,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -2060,9 +2102,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -2104,9 +2146,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -2148,9 +2190,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -2192,9 +2234,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -2236,9 +2278,9 @@
                           }
                         },
                         {
-                          "request_headers": {
-                            "descriptor_key": "client_ip",
-                            "header_name": "x-forwarded-for"
+                          "masked_remote_address": {
+                            "v4_prefix_mask_len": 32,
+                            "v6_prefix_mask_len": 128
                           }
                         }
                       ]
@@ -2269,7 +2311,7 @@
                             "value": "acs"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
@@ -2287,8 +2329,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 200,
-                          "tokens_per_fill": 200
+                          "max_tokens": 720,
+                          "tokens_per_fill": 720
                         }
                       },
                       {
@@ -2298,13 +2340,13 @@
                             "value": "registry-allocations"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 30,
-                          "tokens_per_fill": 30
+                          "max_tokens": 120,
+                          "tokens_per_fill": 120
                         }
                       },
                       {
@@ -2316,8 +2358,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 200,
-                          "tokens_per_fill": 200
+                          "max_tokens": 720,
+                          "tokens_per_fill": 720
                         }
                       },
                       {
@@ -2327,13 +2369,30 @@
                             "value": "registry-metadata-info"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address",
+                            "value": "192.68.78.50/32"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 30,
-                          "tokens_per_fill": 30
+                          "max_tokens": 250,
+                          "tokens_per_fill": 250
+                        }
+                      },
+                      {
+                        "entries": [
+                          {
+                            "key": "header_match",
+                            "value": "registry-metadata-info"
+                          },
+                          {
+                            "key": "masked_remote_address"
+                          }
+                        ],
+                        "token_bucket": {
+                          "fill_interval": "60s",
+                          "max_tokens": 120,
+                          "tokens_per_fill": 120
                         }
                       },
                       {
@@ -2345,8 +2404,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 200,
-                          "tokens_per_fill": 200
+                          "max_tokens": 720,
+                          "tokens_per_fill": 720
                         }
                       },
                       {
@@ -2356,13 +2415,13 @@
                             "value": "registry-metadata-instruments"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 30,
-                          "tokens_per_fill": 30
+                          "max_tokens": 120,
+                          "tokens_per_fill": 120
                         }
                       },
                       {
@@ -2374,8 +2433,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 200,
-                          "tokens_per_fill": 200
+                          "max_tokens": 720,
+                          "tokens_per_fill": 720
                         }
                       },
                       {
@@ -2385,13 +2444,13 @@
                             "value": "registry-allocation-factory"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 30,
-                          "tokens_per_fill": 30
+                          "max_tokens": 120,
+                          "tokens_per_fill": 120
                         }
                       },
                       {
@@ -2403,8 +2462,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 200,
-                          "tokens_per_fill": 200
+                          "max_tokens": 720,
+                          "tokens_per_fill": 720
                         }
                       },
                       {
@@ -2414,13 +2473,13 @@
                             "value": "registry-transfer-instruction"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 30,
-                          "tokens_per_fill": 30
+                          "max_tokens": 120,
+                          "tokens_per_fill": 120
                         }
                       },
                       {
@@ -2432,8 +2491,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 500,
-                          "tokens_per_fill": 500
+                          "max_tokens": 1440,
+                          "tokens_per_fill": 1440
                         }
                       },
                       {
@@ -2443,13 +2502,13 @@
                             "value": "registry-transfer-factory"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 50,
-                          "tokens_per_fill": 50
+                          "max_tokens": 240,
+                          "tokens_per_fill": 240
                         }
                       },
                       {
@@ -2461,8 +2520,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 200,
-                          "tokens_per_fill": 200
+                          "max_tokens": 720,
+                          "tokens_per_fill": 720
                         }
                       },
                       {
@@ -2472,13 +2531,13 @@
                             "value": "registry-settlement-factory-v2"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 30,
-                          "tokens_per_fill": 30
+                          "max_tokens": 120,
+                          "tokens_per_fill": 120
                         }
                       },
                       {
@@ -2490,8 +2549,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 200,
-                          "tokens_per_fill": 200
+                          "max_tokens": 720,
+                          "tokens_per_fill": 720
                         }
                       },
                       {
@@ -2501,13 +2560,13 @@
                             "value": "registry-allocations-v2"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 30,
-                          "tokens_per_fill": 30
+                          "max_tokens": 120,
+                          "tokens_per_fill": 120
                         }
                       },
                       {
@@ -2519,8 +2578,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 200,
-                          "tokens_per_fill": 200
+                          "max_tokens": 720,
+                          "tokens_per_fill": 720
                         }
                       },
                       {
@@ -2530,13 +2589,13 @@
                             "value": "registry-allocation-factory-v2"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 30,
-                          "tokens_per_fill": 30
+                          "max_tokens": 120,
+                          "tokens_per_fill": 120
                         }
                       },
                       {
@@ -2548,8 +2607,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 200,
-                          "tokens_per_fill": 200
+                          "max_tokens": 720,
+                          "tokens_per_fill": 720
                         }
                       },
                       {
@@ -2559,13 +2618,13 @@
                             "value": "registry-allocation-instruction-v2"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 30,
-                          "tokens_per_fill": 30
+                          "max_tokens": 120,
+                          "tokens_per_fill": 120
                         }
                       },
                       {
@@ -2577,8 +2636,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 500,
-                          "tokens_per_fill": 500
+                          "max_tokens": 720,
+                          "tokens_per_fill": 720
                         }
                       },
                       {
@@ -2588,13 +2647,13 @@
                             "value": "registry-transfer-factory-v2"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 50,
-                          "tokens_per_fill": 50
+                          "max_tokens": 120,
+                          "tokens_per_fill": 120
                         }
                       },
                       {
@@ -2606,8 +2665,8 @@
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 200,
-                          "tokens_per_fill": 200
+                          "max_tokens": 720,
+                          "tokens_per_fill": 720
                         }
                       },
                       {
@@ -2617,16 +2676,17 @@
                             "value": "registry-transfer-instruction-v2"
                           },
                           {
-                            "key": "client_ip"
+                            "key": "masked_remote_address"
                           }
                         ],
                         "token_bucket": {
                           "fill_interval": "60s",
-                          "max_tokens": 30,
-                          "tokens_per_fill": 30
+                          "max_tokens": 120,
+                          "tokens_per_fill": 120
                         }
                       }
                     ],
+                    "enable_x_ratelimit_headers": "DRAFT_VERSION_03",
                     "filter_enabled": {
                       "default_value": {
                         "denominator": "HUNDRED",
@@ -2641,6 +2701,7 @@
                       },
                       "runtime_key": "local_rate_limit_enforced"
                     },
+                    "max_dynamic_descriptors": 10000,
                     "response_headers_to_add": [
                       {
                         "append_action": "OVERWRITE_IF_EXISTS_OR_ADD",
